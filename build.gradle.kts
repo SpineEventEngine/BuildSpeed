@@ -36,8 +36,6 @@ plugins {
 repositories.standardToSpineSdk()
 
 dependencies {
-    implementation(Spine.base)
-    implementation(Spine.baseTypes)
-    implementation(Spine.time)
+    implementation(Spine.server)
     implementation(Validation.runtime)
 }

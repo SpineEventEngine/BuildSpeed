@@ -55,6 +55,11 @@ message LabelId {
     string uuid = 1;
 }
 
-message RoleId {
+message GoogleUserId {
+    string value = 1;
+    string etag = 2;
+}
+
+message CommentId {
     string uuid = 1;
 }

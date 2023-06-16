@@ -31,16 +31,29 @@ package spine.buildtime.perf.prjmgt;
 import "spine/options.proto";
 
 option java_package = "io.spine.buildtime.perf.prjmgt";
-option java_outer_classname = "TimeProto";
+option java_outer_classname = "SignUpProto";
 option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
 
-message TimeEstimate {
+import "spine/buildtime/perf/prjmgt/identifiers.proto";
+import "spine/buildtime/perf/prjmgt/roles.proto";
+import "spine/net/email_address.proto";
+import "spine/time/time.proto";
 
-    oneof kind {
+message SigningUp {
+    option (entity).kind = PROCESS_MANAGER;
 
-        float duration_hours = 1 [(min).value = "0.5"];
+    OrgId organization = 1;
 
-        int32 story_points = 2 [(min).value = "1"];
-    }
+    UserId user = 2;
+
+    spine.net.EmailAddress email = 3;
+
+    GoogleUserId google_id = 4;
+
+    spine.time.ZonedDateTime when_started = 5;
+
+    spine.time.ZonedDateTime when_verified = 6;
+
+    repeated Role initial_roles = 7;
 }

@@ -24,23 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package io.spine.buildtime.perf.prjmgt;
 
-package spine.buildtime.perf.prjmgt;
+import io.spine.annotation.GeneratedMixin;
+import io.spine.base.EventMessage;
 
-import "spine/options.proto";
-
-option java_package = "io.spine.buildtime.perf.prjmgt";
-option java_outer_classname = "TimeProto";
-option java_multiple_files = true;
-option (type_url_prefix) = "type.spine.io";
-
-message TimeEstimate {
-
-    oneof kind {
-
-        float duration_hours = 1 [(min).value = "0.5"];
-
-        int32 story_points = 2 [(min).value = "1"];
-    }
+@GeneratedMixin
+public interface TaskEvent extends EventMessage {
 }

@@ -93,11 +93,13 @@ message Task {
 
 message Comment {
 
-    UserId author = 1 [(required) = true];
+    CommentId id = 1 [(required) = true];
 
-    spine.time.ZonedDateTime when_published = 2 [(required) = true, (validate) = true];
+    UserId author = 2 [(required) = true];
 
-    RichText text = 3 [(required) = true, (validate) = true];
+    spine.time.ZonedDateTime when_published = 3 [(required) = true, (validate) = true];
 
-    repeated spine.net.Url attachments = 4;
+    RichText text = 4 [(required) = true, (validate) = true];
+
+    repeated spine.net.Url attachments = 5;
 }

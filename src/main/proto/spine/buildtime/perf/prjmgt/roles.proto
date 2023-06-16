@@ -49,6 +49,7 @@ message Role {
     oneof scope {
         ProjectId project = 2;
         TaskId task = 3;
+        bool whole_organization = 4;
     }
 
     enum Access {
@@ -72,5 +73,5 @@ message Role {
 extend google.protobuf.MessageOptions {
 
     // A role required for a user to be able to issue a command.
-    Role requited_role = 73947;
+    Role required_role = 73947;
 }
