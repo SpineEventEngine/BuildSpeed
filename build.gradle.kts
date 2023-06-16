@@ -31,11 +31,31 @@ import io.spine.internal.gradle.standardToSpineSdk
 plugins {
     java
     id("com.google.protobuf")
+    idea
+}
+
+buildscript {
+    standardSpineSdkRepositories()
+    dependencies {
+        @Suppress("RemoveRedundantQualifierName")
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+    }
 }
 
 repositories.standardToSpineSdk()
 
+apply(plugin = Spine.McJava.pluginId)
+
 dependencies {
     implementation(Spine.server)
     implementation(Validation.runtime)
+}
+
+idea {
+    module {
+        generatedSourceDirs = listOf(
+            "$projectDir/generated/main/java",
+            "$projectDir/generated/main/kotlin"
+        ).map(::file).toSet()
+    }
 }

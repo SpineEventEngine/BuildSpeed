@@ -42,7 +42,6 @@ import "spine/buildtime/perf/prjmgt/time.proto";
 import "spine/buildtime/perf/prjmgt/rich_text.proto";
 import "spine/buildtime/perf/prjmgt/roles.proto";
 import "spine/time/time.proto";
-import "spine/time_options.proto";
 import "spine/net/url.proto";
 import "google/protobuf/duration.proto";
 
@@ -168,7 +167,7 @@ message AssignDueDate {
 
     TaskId id = 2 [(required) = true];
 
-    spine.time.LocalDate new_due_date = 3 [(required) = true, (when).in = FUTURE];
+    spine.time.LocalDate new_due_date = 3 [(required) = true];
 }
 
 message ProlongDueDate {
@@ -180,7 +179,7 @@ message ProlongDueDate {
 
     spine.time.LocalDate old_due_date = 3 [(required) = true];
 
-    spine.time.LocalDate new_due_date = 4 [(required) = true, (when).in = FUTURE];
+    spine.time.LocalDate new_due_date = 4 [(required) = true];
 }
 
 message EstimateTask {
