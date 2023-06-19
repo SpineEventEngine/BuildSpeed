@@ -74,9 +74,9 @@ message Style {
 
     repeated StyleFeature features = 1;
 
-    Color text_color = 2;
+    Color text_color = 2 [(goes).with = "highlight_color"];
 
-    Color highlight_color = 3;
+    Color highlight_color = 3 [(goes).with = "text_color"];
 
     Font font = 4;
 }
