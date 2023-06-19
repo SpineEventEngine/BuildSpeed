@@ -1,0 +1,137 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtime.perf.prjcts;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtime.perf.prjcts";
+option java_outer_classname = "RichTextProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/net/url.proto";
+
+enum StyleFeature {
+
+    UNKNOWN_STYLE_FEATURE = 0;
+
+    PLAIN = 1;
+
+    ITALIC = 2;
+
+    BOLD = 3;
+
+    UNDERLINED = 4;
+
+    STROKED = 5;
+}
+
+message Color {
+
+    int32 argb = 1;
+}
+
+message Font {
+
+    oneof family {
+        option (is_required) = true;
+
+        string name = 1;
+
+        spine.net.Url ttf_url = 2;
+    }
+
+    int32 size = 3 [(range) = "[8..32]"];
+}
+
+message Style {
+
+    repeated StyleFeature features = 1;
+
+    Color text_color = 2 [(goes).with = "highlight_color"];
+
+    Color highlight_color = 3 [(goes).with = "text_color"];
+
+    Font font = 4;
+}
+
+message Span {
+
+    string raw_text = 1 [(required) = true];
+
+    Style style = 2;
+}
+
+message Hyperlink {
+
+    Fragment alt_text = 1 [
+        (required) = true,
+        (validate) = true,
+        (if_missing).error_msg = "Hyperlink text should not be empty."
+    ];
+
+    spine.net.Url url = 2 [(required) = true];
+
+    Style new_style = 3 [
+        (validate) = true,
+        (if_invalid).error_msg = "Hyperlink style should be valid."
+    ];
+
+    Style visited_style = 4 [
+        (validate) = true,
+        (if_invalid).error_msg = "Clicked hyperlink style should be valid."
+    ];
+
+    bool visited = 5;
+}
+
+message Icon {
+
+    spine.net.Url url = 1;
+
+    string alt_text = 2;
+}
+
+message Fragment {
+
+    oneof kind {
+        option (is_required) = true;
+
+        Span text_span = 1 [(validate) = true];
+
+        Hyperlink hyperlink = 2 [(validate) = true];
+
+        Icon icon = 3 [(validate) = true];
+    }
+}
+
+message RichText {
+
+    repeated Fragment fragments = 1 [(required) = true, (validate) = true];
+}

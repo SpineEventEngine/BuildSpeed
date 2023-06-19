@@ -1,0 +1,325 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtime.perf.pmanag;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtime.perf.pmanag";
+option java_outer_classname = "TaskCommandsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+option (every_is) = { java_type: "TaskCommand" generate: true };
+
+import "spine/buildtime/perf/pmanag/identifiers.proto";
+import "spine/buildtime/perf/pmanag/time.proto";
+import "spine/buildtime/perf/pmanag/rich_text.proto";
+import "spine/buildtime/perf/pmanag/roles.proto";
+import "spine/time/time.proto";
+import "spine/net/url.proto";
+import "google/protobuf/duration.proto";
+
+message CreateTask {
+    option (required_role) = {
+        access: EDITOR
+        project: {}
+    };
+
+    OrgId organization = 1 [(required) = true];
+
+    string title = 2 [(required) = true];
+
+    RichText description = 3 [(validate) = true];
+
+    repeated TaskId tags = 4 [(validate) = true];
+
+    UserId owner = 5 [(required) = true];
+
+    repeated spine.net.Url attachment_files = 6;
+}
+
+message LeaveComment {
+    option (required_role) = { access: COMMENTER task: {} };
+
+    TaskId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+
+    UserId author = 3 [(required) = true];
+
+    RichText text = 4 [(required) = true, (validate) = true];
+
+    repeated spine.net.Url attachments = 5 [(distinct) = true];
+}
+
+message RemoveComment {
+    option (required_role) = { access: COMMENTER task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    CommentId id = 2 [(required) = true];
+}
+
+message EditComment {
+    option (required_role) = { access: COMMENTER task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    CommentId id = 2 [(required) = true];
+
+    RichText new_text = 3 [(required) = true, (validate) = true];
+}
+
+message AttachFileToComment {
+    option (required_role) = { access: COMMENTER task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    CommentId id = 2 [(required) = true];
+
+    spine.net.Url file = 3 [(required) = true];
+}
+
+message RemoveCommentAttachment {
+    option (required_role) = { access: COMMENTER task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    CommentId id = 2 [(required) = true];
+
+    spine.net.Url file = 3 [(required) = true];
+}
+
+message LabelTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    LabelId label = 3 [(required) = true];
+}
+
+message UnLabelTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    LabelId label = 3 [(required) = true];
+}
+
+message ChangeTaskTitle {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    string old_title = 3 [(required) = true];
+
+    string new_title = 4 [(required) = true];
+}
+
+message ChangeTaskDescription {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    RichText old_description = 3 [(required) = true, (validate) = true];
+
+    RichText new_description = 4 [(required) = true, (validate) = true];
+}
+
+message AssignDueDate {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    spine.time.LocalDate new_due_date = 3 [(required) = true];
+}
+
+message ProlongDueDate {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    spine.time.LocalDate old_due_date = 3 [(required) = true];
+
+    spine.time.LocalDate new_due_date = 4 [(required) = true];
+}
+
+message EstimateTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    TimeEstimate estimate = 3 [(required) = true];
+}
+
+message AssignTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    UserId assignee = 3 [(required) = true];
+}
+
+message ReassignTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    UserId old_assignee = 3 [(required) = true];
+
+    UserId new_assignee = 4 [(required) = true];
+}
+
+message RemoveTaskAssignee {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+}
+
+message AssignTaskSupervisor {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    UserId supervisor = 3 [(required) = true];
+}
+
+message ReassignTaskSupervisor {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    UserId old_supervisor = 3 [(required) = true];
+
+    UserId new_supervisor = 4 [(required) = true];
+}
+
+message RemoveTaskSupervisor {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId id = 2 [(required) = true];
+
+    UserId supervisor = 3 [(required) = true];
+}
+
+message AttachFileToTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+
+    spine.net.Url attachment = 3 [(required) = true];
+}
+
+message RemoveTaskAttachment {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+
+    spine.net.Url attachment = 3 [(required) = true];
+}
+
+message SendIntoReview {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+}
+
+message CompleteTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+}
+
+message CancelTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+}
+
+message RejectTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+}
+
+message ReopenTask {
+    option (required_role) = { access: EDITOR task: {} };
+
+    OrgId organization = 1 [(required) = true];
+
+    TaskId task = 2 [(required) = true];
+}
+
+message CreteLabel {
+
+    string name = 1 [
+        (pattern).regex = "[\\w\\s]{3,}",
+        (pattern).error_msg = "Label should only contain letters, numbers and spaces."
+    ];
+
+    Color color =  2 [(required) = true, (validate) = true];
+}
