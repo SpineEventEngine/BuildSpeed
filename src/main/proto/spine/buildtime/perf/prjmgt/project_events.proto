@@ -31,7 +31,7 @@ package spine.buildtime.perf.prjmgt;
 import "spine/options.proto";
 
 option java_package = "io.spine.buildtime.perf.prjmgt";
-option java_outer_classname = "ProjectProto";
+option java_outer_classname = "ProjectEventsProto";
 option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
 
@@ -42,11 +42,11 @@ message ProjectCreated {
 
     OrgId organization = 1;
 
-    ProjectId id = 2 [(required) = true];
+    ProjectId id = 2;
 
-    string name = 3 [(required) = true];
+    string name = 3;
 
-    UserId owner = 4 [(required) = true];
+    UserId owner = 4;
 
     repeated UserId admins = 5;
 
@@ -57,5 +57,5 @@ message ProjectRenamed {
 
     ProjectId id = 1;
 
-    string name = 2 [(required) = true];
+    string name = 2;
 }

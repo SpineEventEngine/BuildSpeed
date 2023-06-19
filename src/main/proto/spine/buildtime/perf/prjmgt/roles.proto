@@ -34,6 +34,7 @@ option java_package = "io.spine.buildtime.perf.prjmgt";
 option java_outer_classname = "RolesProto";
 option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
+option (beta_all) = true;
 
 import "google/protobuf/descriptor.proto";
 import "spine/buildtime/perf/prjmgt/identifiers.proto";
@@ -43,6 +44,7 @@ import "spine/buildtime/perf/prjmgt/identifiers.proto";
 // A single user may have multiple roles.
 //
 message Role {
+    option (internal_type) = true;
 
     Access access = 1;
 
