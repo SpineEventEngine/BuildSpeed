@@ -31,41 +31,52 @@ package spine.buildtime.perf.prjmgt;
 import "spine/options.proto";
 
 option java_package = "io.spine.buildtime.perf.prjmgt";
-option java_outer_classname = "ProjectIdsProto";
+option java_outer_classname = "MyTasksProto";
 option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
 
-message OrgId {
-    string uuid = 1;
+import "spine/buildtime/perf/prjmgt/identifiers.proto";
+import "spine/buildtime/perf/prjmgt/rich_text.proto";
+import "spine/buildtime/perf/prjmgt/task.proto";
+import "spine/buildtime/perf/prjmgt/label.proto";
+import "spine/people/person_name.proto";
+
+message MyTasks {
+    option (entity).kind = PROJECTION;
+
+    UserId user = 1;
+
+    repeated Task tasks = 2;
+
+    // The map of human-readable named mentioned in the `tasks` via their IDs.
+    //
+    // The map key is the user ID value.
+    //
+    map<string, spine.people.PersonName> involved_users = 3;
+
+    // The map of displayable labels applied to the `tasks`.
+    //
+    // The map key is the label ID value.
+    //
+    map<string, Label> used_labels = 4;
 }
 
-message ProjectId {
-    string uuid = 1;
-}
+message TaskCounter {
+    option (entity).kind = PROJECTION;
 
-message TaskId {
-    string uuid = 1;
-}
+    TaskCounterId id = 1;
 
-message UserId {
-    string uuid = 1;
-}
+    uint32 open = 2 [(min).value = "0", (max).value = "42"];
 
-message LabelId {
-    string uuid = 1;
-}
+    uint32 in_review = 3 [(min).value = "0", (max).value = "42", (max).exclusive = true];
 
-message GoogleUserId {
-    string value = 1;
-    string etag = 2;
-}
+    uint32 completed = 4 [
+        (min).value = "0",
+        (max).value = "1080",
+        (min).error_msg = "Too few tasks completed."
+    ];
 
-message CommentId {
-    string uuid = 1;
-}
+    uint32 canceled = 5 [(min).value = "0", (max).value = "2048"];
 
-message TaskCounterId {
-    UserId userId = 1 [(required) = true, (validate) = true];
-
-    ProjectId projectId = 2 [(required) = true, (validate) = true];
+    uint32 rejected = 6 [(min).value = "0", (max).value = "11111"];
 }
