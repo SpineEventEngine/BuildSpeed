@@ -254,26 +254,6 @@ message RemoveTaskSupervisor {
     UserId supervisor = 3 [(required) = true];
 }
 
-message TagTask {
-    option (required_role) = { access: EDITOR task: {} };
-
-    OrgId organization = 1 [(required) = true];
-
-    TaskId task = 2 [(required) = true];
-
-    TaskId tag = 3 [(required) = true];
-}
-
-message UntagTask {
-    option (required_role) = { access: EDITOR task: {} };
-
-    OrgId organization = 1 [(required) = true];
-
-    TaskId task = 2 [(required) = true];
-
-    TaskId tag = 3 [(required) = true];
-}
-
 message AttachFileToTask {
     option (required_role) = { access: EDITOR task: {} };
 
@@ -332,4 +312,14 @@ message ReopenTask {
     OrgId organization = 1 [(required) = true];
 
     TaskId task = 2 [(required) = true];
+}
+
+message CreteLabel {
+
+    string name = 1 [
+        (pattern).regex = "[\\w\\s]{3,}",
+        (pattern).error_msg = "Label should only contain letters, numbers and spaces."
+    ];
+
+    Color color =  2 [(required) = true, (validate) = true];
 }

@@ -42,7 +42,7 @@ message Project {
 
     ProjectId id = 1;
 
-    OrgId organization = 7 [(required) = true];
+    OrgId organization = 7 [(required) = true, (set_once) = true];
 
     string name = 2 [(required) = true];
 

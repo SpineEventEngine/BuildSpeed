@@ -90,13 +90,23 @@ message Span {
 
 message Hyperlink {
 
-    Fragment alt_text = 1 [(required) = true, (validate) = true];
+    Fragment alt_text = 1 [
+        (required) = true,
+        (validate) = true,
+        (if_missing).error_msg = "Hyperlink text should not be empty."
+    ];
 
     spine.net.Url url = 2 [(required) = true];
 
-    Style new_style = 3;
+    Style new_style = 3 [
+        (validate) = true,
+        (if_invalid).error_msg = "Hyperlink style should be valid."
+    ];
 
-    Style visited_style = 4;
+    Style visited_style = 4 [
+        (validate) = true,
+        (if_invalid).error_msg = "Clicked hyperlink style should be valid."
+    ];
 
     bool visited = 5;
 }

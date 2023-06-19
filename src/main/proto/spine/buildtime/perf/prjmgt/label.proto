@@ -31,75 +31,19 @@ package spine.buildtime.perf.prjmgt;
 import "spine/options.proto";
 
 option java_package = "io.spine.buildtime.perf.prjmgt";
-option java_outer_classname = "TaskProto";
+option java_outer_classname = "LabelProto";
 option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
 
 import "spine/buildtime/perf/prjmgt/identifiers.proto";
-import "spine/buildtime/perf/prjmgt/time.proto";
 import "spine/buildtime/perf/prjmgt/rich_text.proto";
-import "spine/time/time.proto";
-import "spine/net/url.proto";
-import "google/protobuf/duration.proto";
 
-message Task {
+message Label {
     option (entity).kind = AGGREGATE;
-    option (is) = {
-        java_type: "TaskMixin"
-        generate: true
-    };
 
-    TaskId id = 1;
+    LabelId id = 1;
 
-    OrgId organization = 2 [(required) = true];
+    string name = 2 [(required) = true, (set_once) = true];
 
-    string title = 3 [(required) = true];
-
-    RichText description = 4 [(validate) = true];
-
-    repeated LabelId labels = 5 [(validate) = true];
-
-    UserId owner = 6 [(required) = true];
-
-    UserId assignee = 7;
-
-    UserId supervisor = 8;
-
-    TimeEstimate estimate = 9;
-
-    spine.time.LocalDate due = 10;
-
-    enum Status {
-
-        TASK_STATUS_UNKNOWN = 0;
-
-        OPEN = 1;
-
-        IN_REVIEW = 2;
-
-        COMPLETE = 3;
-
-        CANCELED = 4;
-
-        REJECTED = 5;
-    }
-
-    Status status = 11 [(required) = true];
-
-    repeated spine.net.Url attachment_files = 12;
-
-    repeated Comment comments = 13;
-}
-
-message Comment {
-
-    CommentId id = 1 [(required) = true];
-
-    UserId author = 2 [(required) = true];
-
-    spine.time.ZonedDateTime when_published = 3 [(required) = true, (validate) = true];
-
-    RichText text = 4 [(required) = true, (validate) = true];
-
-    repeated spine.net.Url attachments = 5;
+    Color color =  3 [(required) = true, (validate) = true, (set_once) = true];
 }

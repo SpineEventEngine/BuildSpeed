@@ -311,3 +311,12 @@ message TaskReopened {
 
     TaskId task = 2;
 }
+
+message LabelCreated {
+
+    LabelId id = 1;
+
+    string name = 2;
+
+    Color color = 3;
+}
