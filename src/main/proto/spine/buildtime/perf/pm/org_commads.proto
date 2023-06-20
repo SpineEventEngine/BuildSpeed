@@ -1,0 +1,171 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtime.perf.pm;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtime.perf.pm";
+option java_outer_classname = "OrgCommandsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtime/perf/pm/identifiers.proto";
+import "spine/buildtime/perf/pm/organization.proto";
+import "spine/buildtime/perf/pm/roles.proto";
+
+message CreateOrganization {
+
+    string display_name = 1;
+
+    UserId headmaster = 2;
+
+    StripeId payment_account_id = 3;
+
+    Plan plan = 4;
+}
+
+message UpgradePlan {
+    option (required_role) = {
+        access: ADMIN,
+        whole_organization: true
+    };
+
+    OrgId id = 1;
+
+    Plan old_plan = 2;
+
+    Plan new_plan = 3;
+}
+
+message DowngradePlan {
+    option (required_role) = {
+        access: ADMIN,
+        whole_organization: true
+    };
+
+    OrgId id = 1;
+
+    Plan old_plan = 2;
+
+    Plan new_plan = 3;
+}
+
+message ChangePaymentInfo {
+    option (required_role) = {
+        access: ADMIN,
+        whole_organization: true
+    };
+
+    OrgId id = 1;
+
+    StripeId new_payment_account_id = 2;
+}
+
+message AcceptNewMember {
+    option (required_role) = {
+        access: ADMIN,
+        whole_organization: true
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    repeated Role initial_roles = 3;
+}
+
+message RemoveMember {
+    option (required_role) = {
+        access: ADMIN,
+        whole_organization: true
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+}
+
+message AddNewAdmin {
+    option (required_role) = {
+        access: HEADMASTER,
+        whole_organization: true
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    Role new_role = 3;
+}
+
+message RevokeAdminRole {
+    option (required_role) = {
+        access: HEADMASTER,
+        whole_organization: true
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    Role role = 3;
+}
+
+message GrantNewRole {
+    option (required_role) = {
+        access: ADMIN
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    Role new_role = 3;
+}
+
+message RevokeRole {
+    option (required_role) = {
+        access: ADMIN
+    };
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    Role role = 3;
+}
+
+message DeleteOrganization {
+    option (required_role) = {
+        access: HEADMASTER,
+        whole_organization: true
+    };
+
+    OrgId id = 1;
+}

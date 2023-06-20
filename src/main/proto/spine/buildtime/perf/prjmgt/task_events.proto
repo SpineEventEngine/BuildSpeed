@@ -1,0 +1,322 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtime.perf.prjmgt;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtime.perf.prjmgt";
+option java_outer_classname = "TaskEventsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+option (every_is).java_type = "TaskEvent";
+
+import "spine/buildtime/perf/prjmgt/identifiers.proto";
+import "spine/buildtime/perf/prjmgt/time.proto";
+import "spine/buildtime/perf/prjmgt/rich_text.proto";
+import "spine/buildtime/perf/prjmgt/roles.proto";
+import "spine/time/time.proto";
+import "spine/time_options.proto";
+import "spine/net/url.proto";
+import "google/protobuf/duration.proto";
+
+message TaskCreated {
+    option (required_role) = {
+        access: EDITOR
+        project: {}
+    };
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    string title = 3;
+
+    RichText description = 4;
+
+    repeated TaskId tags = 5;
+
+    UserId owner = 6;
+
+    repeated spine.net.Url attachment_files = 7;
+}
+
+message CommentLeft {
+
+    TaskId task = 1;
+
+    CommentId id = 2;
+
+    OrgId organization = 3;
+
+    UserId author = 4;
+
+    RichText text = 5;
+
+    repeated spine.net.Url attachments = 6;
+}
+
+message CommentRemoved {
+
+    OrgId organization = 1;
+
+    CommentId id = 2;
+}
+
+message CommentEdited {
+
+    OrgId organization = 1;
+
+    CommentId id = 2;
+
+    RichText new_text = 3;
+}
+
+message FileAttachedToComment {
+
+    OrgId organization = 1;
+
+    CommentId id = 2;
+
+    spine.net.Url attachment = 3;
+}
+
+message CommentAttachmentRemoved {
+
+    OrgId organization = 1;
+
+    CommentId id = 2;
+
+    spine.net.Url attachment = 3;
+}
+
+message TaskLabeled {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    LabelId label = 3;
+}
+
+message TaskUnLabeled {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    LabelId label = 3;
+}
+
+message TaskTitleChanged {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    string old_title = 3;
+
+    string new_title = 4;
+}
+
+message TaskDescriptionChanged {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    RichText old_description = 3;
+
+    RichText new_description = 4;
+}
+
+message DueDateAssigned {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    spine.time.LocalDate new_due_date = 3;
+}
+
+message DueDateProlonged {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    spine.time.LocalDate old_due_date = 3;
+
+    spine.time.LocalDate new_due_date = 4;
+}
+
+message TaskEstimateChanged {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    TimeEstimate estimate = 3;
+}
+
+message TaskAssigned {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    UserId assignee = 3;
+}
+
+message TaskReassigned {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    UserId old_assignee = 3;
+
+    UserId new_assignee = 4;
+}
+
+message TaskAssigneeRemoved {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+}
+
+message TaskSupervisorAssigned {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    UserId supervisor = 3;
+}
+
+message TaskSupervisorReassigned {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    UserId old_supervisor = 3;
+
+    UserId new_supervisor = 4;
+}
+
+message TaskSupervisorRemoved {
+
+    OrgId organization = 1;
+
+    TaskId id = 2;
+
+    UserId supervisor = 3;
+}
+
+message TaskTagged {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+
+    TaskId tag = 3;
+}
+
+message TaskUntagged {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+
+    TaskId tag = 3;
+}
+
+message FileAttachedToTask {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+
+    spine.net.Url attachment = 3;
+}
+
+message TaskAttachmentRemoved {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+
+    spine.net.Url attachment = 3;
+}
+
+message SentIntoReview {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+}
+
+message TaskCompleted {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+}
+
+message TaskCanceled {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+}
+
+message TaskRejected {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+}
+
+message TaskReopened {
+
+    OrgId organization = 1;
+
+    TaskId task = 2;
+}
+
+message LabelCreated {
+
+    LabelId id = 1;
+
+    string name = 2;
+
+    Color color = 3;
+}
