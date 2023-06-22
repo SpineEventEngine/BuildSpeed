@@ -30,4 +30,4 @@
 # supplied via the environment variables. See `settings.gradle.kts.template` for the names of
 # the environment variables.
 
-cat ./settings.gradle.kts.template | envsubst > ./settings.gradle.kts
+< ./settings.gradle.kts.template envsubst > ./settings.gradle.kts
