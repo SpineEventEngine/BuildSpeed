@@ -41,22 +41,48 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("spine") {
             val mcJava = version("mcJava", "$MC_JAVA_VERSION")
+            val core = version("core", "$CORE_VERSION")
             val protoData = version("protoData", "$PROTO_DATA_VERSION")
             val validation = version("validation", "$VALIDATION_VERSION")
 
+            val baseGroup = "io.spine"
+            val toolsGroup = "$baseGroup.tools"
+            val protoDataGroup = "$baseGroup.protodata"
+            val validationGroup = "$baseGroup.validation"
+
             library(
                 "mcJava",
-                "io.spine.tools", "spine-mc-java-plugins"
+                toolsGroup, "spine-mc-java-plugins"
             ).versionRef(mcJava)
 
             library(
-                "validation.runtime",
-                "io.spine.validation", "spine-validation-java-runtime"
+                "server",
+                baseGroup, "spine-server"
+            ).versionRef(core)
+
+            library(
+                "protoData.plugin",
+                baseGroup, "protodata"
             ).versionRef(protoData)
 
             library(
-                "protodata.plugin",
-                "io.spine.validation", "spine-validation-java-runtime"
+                "protoData.compiler",
+                protoDataGroup, "protodata-compiler"
+            ).versionRef(protoData)
+
+            library(
+                "protoData.codegenJava",
+                protoDataGroup, "protodata-codegen-java"
+            ).versionRef(protoData)
+
+            library(
+                "validation.codegenJava",
+                validationGroup, "spine-validation-java-bundle"
+            ).versionRef(validation)
+
+            library(
+                "validation.runtimeJava",
+                validationGroup, "spine-validation-java-runtime"
             ).versionRef(validation)
         }
     }
