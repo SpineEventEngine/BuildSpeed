@@ -25,7 +25,6 @@
  */
 
 import io.spine.internal.dependency.Spine
-import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.standardToSpineSdk
 
 plugins {
@@ -36,9 +35,18 @@ plugins {
 
 buildscript {
     standardSpineSdkRepositories()
+
     dependencies {
-        @Suppress("RemoveRedundantQualifierName")
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+        classpath(variantOf(spine.mcJava) { classifier("all") })
+    }
+
+    configurations.all {
+        resolutionStrategy.force(
+            spine.protoData.plugin,
+            spine.protoData.compiler,
+            spine.protoData.codegenJava,
+            spine.validation.codegenJava,
+        )
     }
 }
 
@@ -47,8 +55,16 @@ repositories.standardToSpineSdk()
 apply(plugin = Spine.McJava.pluginId)
 
 dependencies {
-    implementation(Spine.server)
-    implementation(Validation.runtime)
+    implementation(spine.server)
+}
+
+configurations.all {
+    resolutionStrategy.force(
+        spine.protoData.compiler,
+        spine.protoData.codegenJava,
+        spine.validation.codegenJava,
+        spine.validation.runtimeJava,
+    )
 }
 
 idea {
