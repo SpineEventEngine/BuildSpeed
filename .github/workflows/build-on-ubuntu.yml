@@ -18,6 +18,15 @@ jobs:
           distribution: zulu
           cache: gradle
 
+      - name: Substitute Gradle settings file
+        shell: bash
+        run: ./substitute-settings.sh
+        env:
+          MC_JAVA_VERSION: "2.0.0-SNAPSHOT.151"
+          CORE_VERSION: "2.0.0-SNAPSHOT.141"
+          PROTO_DATA_VERSION: "0.8.5"
+          VALIDATION_VERSION: "2.0.0-SNAPSHOT.81"
+
       - name: Build project and run tests
         shell: bash
         run: ./gradlew build --stacktrace
