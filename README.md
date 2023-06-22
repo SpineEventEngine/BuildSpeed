@@ -13,3 +13,19 @@ The repo contains 1152 message declarations and 32 enum declarations in 192 `.pr
 This includes command, event, rejection, entity, ID, and value object types.
 The declarations are split into several identical packages which only differ in names.
 This allows us to have more data for testing build tool performance.
+
+## Local usage
+
+To use this repo locally, follow these steps.
+
+1. Add the repo as a Git submodule to your project.
+2. Copy the `settings.gradle.kts.template` file as `settings.gradle.kts`.
+   Replace all the placeholder versions with the required versions. Or, alternatively,
+   add a `dependencySubstitution` block and define which local projects should be used for which
+   dependencies.
+3. Build the project with the `build` task.
+
+## CI usage
+
+To use this repo in CI, follow these steps.
+ __TBD__
