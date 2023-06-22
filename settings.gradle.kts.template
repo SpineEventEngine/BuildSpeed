@@ -39,6 +39,9 @@
 
 dependencyResolutionManagement {
     versionCatalogs {
+
+        // String interpolation can break because of environment variable substitution.
+        @Suppress("ConvertToStringTemplate")
         create("spine") {
             val mcJava = version("mcJava", "$MC_JAVA_VERSION")
             val core = version("core", "$CORE_VERSION")
@@ -46,9 +49,9 @@ dependencyResolutionManagement {
             val validation = version("validation", "$VALIDATION_VERSION")
 
             val baseGroup = "io.spine"
-            val toolsGroup = "$baseGroup.tools"
-            val protoDataGroup = "$baseGroup.protodata"
-            val validationGroup = "$baseGroup.validation"
+            val toolsGroup = baseGroup + ".tools"
+            val protoDataGroup = baseGroup + ".protodata"
+            val validationGroup = baseGroup + ".validation"
 
             library(
                 "mcJava",
