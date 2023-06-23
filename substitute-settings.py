@@ -28,7 +28,8 @@
 
 # This script is overrides the `settings.gradle.kts` file with the versions of
 # Spine dependencies supplied via the environment variables.
-# See `settings.gradle.kts.template` for the names of the environment variables.
+# See `settings.gradle.kts.template` for the names of
+# the environment variables.
 
 import os
 
