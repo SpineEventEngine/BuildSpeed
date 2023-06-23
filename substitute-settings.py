@@ -38,5 +38,13 @@ with open("./settings.gradle.kts.template") as template_file:
 
 text = os.path.expandvars(template)
 
+additional_settings_path = "../buildperformance.settings.gradle.kts"
+if os.path.exists(additional_settings_path):
+    with open(additional_settings_path) as additional_settings_file:
+        more_settings = additional_settings_file.read()
+else:
+    more_settings = "// No additional settings."
+
 with open("./settings.gradle.kts", "w") as settings_file:
-    settings_file.write(text)
+    settings_file.write(text + more_settings)
+

@@ -75,3 +75,9 @@ idea {
         ).map(::file).toSet()
     }
 }
+
+val customConfigFile = "../buildperformance.gradle.kts"
+
+if (file(customConfigFile).exists()) {
+    apply(from = customConfigFile)
+}
