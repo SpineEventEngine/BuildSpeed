@@ -103,7 +103,3 @@ pubspec.lock
 
 # Ignore the `tmp` directory used for building dependant repositories.
 /tmp
-
-# Ignore the `settings.gradle.kts` file, since it should be generated on CI and hand-written for
-# local builds.
-settings.gradle.kts
