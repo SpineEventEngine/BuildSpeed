@@ -14,9 +14,9 @@ This includes command, event, rejection, entity, ID, and value object types.
 The declarations are split into several identical packages which only differ in names.
 This allows us to have more data for testing build tool performance.
 
-## Local usage
+## Manual usage
 
-To use this repo locally, follow these steps.
+To use this repo locally for one-time tests, follow these steps.
 
 1. Add the repo as a Git submodule to your project.
 2. Copy the `settings.gradle.kts.template` file as `settings.gradle.kts`.
@@ -25,7 +25,34 @@ To use this repo locally, follow these steps.
    dependencies.
 3. Build the project with the `build` task.
 
-## CI usage
+## Using with Gradle
 
-To use this repo in CI, follow these steps.
- __TBD__
+To launch the build performance tests with Gradle, follow these steps.
+
+1. Add the repo as a Git submodule to your project.
+2. Create a Gradle task which would call the `substitute-settings.py` script, setting the versions
+   to the versions from the local environment:
+```kotlin
+val prepareBuildPerformanceSettings by tasks.registering(Exec::class) {
+    environment(
+        "MC_JAVA_VERSION" to Spine.McJava.version,
+        "CORE_VERSION" to Spine.ArtifactVersion.core,
+        "PROTO_DATA_VERSION" to ProtoData.version,
+        "VALIDATION_VERSION" to Validation.version
+    )
+    workingDir = File(rootDir, "BuildPerformance")
+    commandLine("./substitute-settings.py")
+}
+```
+3. Create a task calls the `build` task on this project:
+```kotlin
+tasks.register<RunBuild>("checkPerformance") {
+    directory = "$rootDir/BuildPerformance"
+
+    dependsOn(prepareBuildPerformanceSettings, localPublish)
+    shouldRunAfter(check)
+}
+```
+4. Launch the `checkPerformance` task. It's not recommended to include this task into the build
+   by default due to the long execution time. Instead, run it manually when needed and/or launch
+   it on CI.
