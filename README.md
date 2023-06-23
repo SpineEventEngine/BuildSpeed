@@ -44,6 +44,8 @@ val prepareBuildPerformanceSettings by tasks.registering(Exec::class) {
     commandLine("./substitute-settings.py")
 }
 ```
+   This script creates/overrides the `settings.gradle.kts` file with the relevant
+   Spine dependency versions.
 3. Create a task calls the `build` task on this project:
 ```kotlin
 tasks.register<RunBuild>("checkPerformance") {
