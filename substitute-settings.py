@@ -47,4 +47,3 @@ else:
 
 with open("./settings.gradle.kts", "w") as settings_file:
     settings_file.write(text + more_settings)
-
