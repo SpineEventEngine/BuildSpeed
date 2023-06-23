@@ -58,3 +58,9 @@ tasks.register<RunBuild>("checkPerformance") {
 4. Launch the `checkPerformance` task. It's not recommended to include this task into the build
    by default due to the long execution time. Instead, run it manually when needed and/or launch
    it on CI.
+
+## Extra Gradle configuration
+
+If the performance tests require additional configuration, e.g. configuring the tested plugins,
+add a file called `buildperformance.gradle.kts` to the root of the project. This script plugin
+will be applied to the `BuildPerformance` project.
