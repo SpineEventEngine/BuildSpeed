@@ -20,7 +20,7 @@ jobs:
 
       - name: Substitute Gradle settings file
         shell: bash
-        run: ./substitute-settings.sh
+        run: ./substitute-settings.py
         env:
           MC_JAVA_VERSION: "2.0.0-SNAPSHOT.151"
           CORE_VERSION: "2.0.0-SNAPSHOT.141"
