@@ -24,61 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
+package spine.buildtool.speed.projectman;
 
-buildscript {
-    standardSpineSdkRepositories()
+import "spine/options.proto";
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+option java_package = "io.spine.buildtool.speed.projectman";
+option java_outer_classname = "SignUpProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
+import "spine/buildtool/speed/projectman/identifiers.proto";
+import "spine/buildtool/speed/projectman/roles.proto";
+import "spine/net/email_address.proto";
+import "spine/time/time.proto";
 
-repositories.standardToSpineSdk()
+message SigningUp {
+    option (entity).kind = PROCESS_MANAGER;
 
-apply(plugin = Spine.McJava.pluginId)
+    OrgId organization = 1;
 
-dependencies {
-    implementation(spine.server)
-}
+    UserId user = 2;
 
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
+    spine.net.EmailAddress email = 3;
 
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
+    GoogleUserId google_id = 4;
 
-val customConfigFile = "../build-speed.gradle.kts"
+    spine.time.ZonedDateTime when_started = 5;
 
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    spine.time.ZonedDateTime when_verified = 6;
+
+    repeated Role initial_roles = 7;
 }

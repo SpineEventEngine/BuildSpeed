@@ -24,61 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.buildtool.speed.prjmgt;
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
+import com.google.errorprone.annotations.CheckReturnValue;
 
-buildscript {
-    standardSpineSdkRepositories()
-
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
-
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
-
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
-
-val customConfigFile = "../build-speed.gradle.kts"
-
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
-}
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -24,61 +24,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
+package spine.buildtool.speed.prjcts;
 
-buildscript {
-    standardSpineSdkRepositories()
+import "spine/options.proto";
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
+option java_package = "io.spine.buildtool.speed.prjcts";
+option java_outer_classname = "RolesProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+option (beta_all) = true;
+
+import "google/protobuf/descriptor.proto";
+import "spine/buildtool/speed/prjcts/identifiers.proto";
+
+// A role of a user within the organization.
+//
+// A single user may have multiple roles.
+//
+message Role {
+    option (internal_type) = true;
+
+    Access access = 1;
+
+    oneof scope {
+        ProjectId project = 2;
+        TaskId task = 3;
+        bool whole_organization = 4;
     }
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
+    enum Access {
 
-repositories.standardToSpineSdk()
+        ROLE_ACCESS_UNKNOWN = 0;
 
-apply(plugin = Spine.McJava.pluginId)
+        HEADMASTER = 1;
 
-dependencies {
-    implementation(spine.server)
-}
+        ADMIN = 2;
 
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
+        EDITOR = 3;
 
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
+        COMMENTER = 4;
+
+        VIEWER = 5;
+
+        GUEST = 6;
     }
 }
 
-val customConfigFile = "../build-speed.gradle.kts"
+extend google.protobuf.MessageOptions {
 
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    // A role required for a user to be able to issue a command.
+    Role required_role = 73947;
 }

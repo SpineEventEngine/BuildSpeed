@@ -24,61 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
+package spine.buildtool.speed.promag;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.promag";
+option java_outer_classname = "ProjectIdsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+message OrgId {
+    string uuid = 1;
 }
 
-buildscript {
-    standardSpineSdkRepositories()
-
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
-
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
+message ProjectId {
+    string uuid = 1;
 }
 
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
+message TaskId {
+    string uuid = 1;
 }
 
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
+message UserId {
+    string uuid = 1;
 }
 
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
+message LabelId {
+    string uuid = 1;
 }
 
-val customConfigFile = "../build-speed.gradle.kts"
+message GoogleUserId {
+    string value = 1;
+    string etag = 2;
+}
 
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+message CommentId {
+    string uuid = 1;
+}
+
+message TaskCounterId {
+    UserId userId = 1 [(required) = true, (validate) = true];
+
+    ProjectId projectId = 2 [(required) = true, (validate) = true];
 }

@@ -24,61 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
+package spine.buildtool.speed.pm;
 
-buildscript {
-    standardSpineSdkRepositories()
+import "spine/options.proto";
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+option java_package = "io.spine.buildtool.speed.pm";
+option java_outer_classname = "ProjectProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
+import "spine/buildtool/speed/pm/identifiers.proto";
 
-repositories.standardToSpineSdk()
+message Project {
+    option (entity).kind = AGGREGATE;
 
-apply(plugin = Spine.McJava.pluginId)
+    ProjectId id = 1;
 
-dependencies {
-    implementation(spine.server)
-}
+    OrgId organization = 7 [(required) = true, (set_once) = true];
 
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
+    string name = 2 [(required) = true];
 
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
+    repeated TaskId tasks = 3;
 
-val customConfigFile = "../build-speed.gradle.kts"
+    UserId owner = 4 [(required) = true];
 
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    repeated UserId admins = 5;
+
+    repeated UserId members = 6;
 }

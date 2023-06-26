@@ -24,61 +24,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
+package spine.buildtool.speed.prjcts;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.prjcts";
+option java_outer_classname = "UserProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/prjcts/identifiers.proto";
+import "spine/buildtool/speed/prjcts/roles.proto";
+import "spine/people/person_name.proto";
+import "spine/time/time.proto";
+import "spine/net/email_address.proto";
+
+// A user of the project management app.
+message User {
+    option (entity).kind = AGGREGATE;
+
+    UserId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+
+    spine.people.PersonName name = 3 [(required) = true];
+
+    spine.time.ZonedDateTime when_signed_up = 4 [(required) = true];
+
+    spine.time.ZonedDateTime last_login = 5 [(required) = true];
+
+    ContactInfo contact_info = 6 [(required) = true, (validate) = true];
+
+    repeated Role roles = 7 [(validate) = true];
 }
 
-buildscript {
-    standardSpineSdkRepositories()
+message ContactInfo {
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+    spine.net.EmailAddress email = 1 [(required) = true, (validate) = true];
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
-
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
-
-val customConfigFile = "../build-speed.gradle.kts"
-
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    bool verified_email = 2;
 }

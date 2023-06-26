@@ -1,0 +1,105 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtool.speed.prjcts;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.prjcts";
+option java_outer_classname = "TaskProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/prjcts/identifiers.proto";
+import "spine/buildtool/speed/prjcts/time.proto";
+import "spine/buildtool/speed/prjcts/rich_text.proto";
+import "spine/time/time.proto";
+import "spine/net/url.proto";
+import "google/protobuf/duration.proto";
+
+message Task {
+    option (entity).kind = AGGREGATE;
+    option (is) = {
+        java_type: "TaskMixin"
+        generate: true
+    };
+
+    TaskId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+
+    string title = 3 [(required) = true];
+
+    RichText description = 4 [(validate) = true];
+
+    repeated LabelId labels = 5 [(validate) = true];
+
+    UserId owner = 6 [(required) = true];
+
+    UserId assignee = 7;
+
+    UserId supervisor = 8;
+
+    TimeEstimate estimate = 9;
+
+    spine.time.LocalDate due = 10;
+
+    enum Status {
+
+        TASK_STATUS_UNKNOWN = 0;
+
+        OPEN = 1;
+
+        IN_REVIEW = 2;
+
+        COMPLETE = 3;
+
+        CANCELED = 4;
+
+        REJECTED = 5;
+    }
+
+    Status status = 11 [(required) = true];
+
+    repeated spine.net.Url attachment_files = 12;
+
+    repeated Comment comments = 13;
+}
+
+message Comment {
+
+    CommentId id = 1 [(required) = true];
+
+    UserId author = 2 [(required) = true];
+
+    spine.time.ZonedDateTime when_published = 3 [(required) = true, (validate) = true];
+
+    RichText text = 4 [(required) = true, (validate) = true];
+
+    repeated spine.net.Url attachments = 5;
+}

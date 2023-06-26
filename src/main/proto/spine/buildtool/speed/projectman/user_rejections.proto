@@ -24,61 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
+package spine.buildtool.speed.projectman;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.projectman";
+option java_outer_classname = "UserRejections";
+option java_multiple_files = false;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/projectman/identifiers.proto";
+import "spine/buildtool/speed/projectman/roles.proto";
+import "spine/people/person_name.proto";
+import "spine/time/time.proto";
+import "spine/net/email_address.proto";
+
+message UserAlreadyExists {
+
+    UserId id = 1;
+
+    spine.people.PersonName name = 2 [(required) = true];
 }
 
-buildscript {
-    standardSpineSdkRepositories()
+message CannotSignInViaGoogleAuth {
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+    UserId id = 1;
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
-
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
-
-val customConfigFile = "../build-speed.gradle.kts"
-
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    string error_message = 2;
 }

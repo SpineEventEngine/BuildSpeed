@@ -24,61 +24,72 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
+package spine.buildtool.speed.promag;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.promag";
+option java_outer_classname = "OrgRejections";
+option java_multiple_files = false;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/promag/identifiers.proto";
+import "spine/buildtool/speed/promag/organization.proto";
+import "spine/buildtool/speed/promag/roles.proto";
+
+message OrganizationAlreadyExists {
+
+    string display_name = 1;
 }
 
-buildscript {
-    standardSpineSdkRepositories()
+message CannotChangePlan {
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+    OrgId id = 1;
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
+    Plan expected_old_plan = 2;
+
+    Plan actual_old_plan = 3;
+
+    Plan requested_new_plan = 4;
 }
 
-repositories.standardToSpineSdk()
+message CannotAcceptExistingMember {
 
-apply(plugin = Spine.McJava.pluginId)
+    OrgId organization = 1;
 
-dependencies {
-    implementation(spine.server)
+    UserId user = 2;
 }
 
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
+message UserDoesNotExist {
+
+    UserId user = 1;
 }
 
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
+message MemberDoesNotExist {
+
+    OrgId organization = 1;
+
+    UserId user = 2;
 }
 
-val customConfigFile = "../build-speed.gradle.kts"
+message CannotAcceptExistingAdmin {
 
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    OrgId organization = 1;
+
+    UserId user = 2;
+}
+
+message RoleNotFound {
+
+    OrgId organization = 1;
+
+    UserId user = 2;
+
+    Role role = 3;
+}
+
+message OrganizationNotFound {
+    OrgId id = 1;
 }

@@ -1,0 +1,97 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtool.speed.managementofprojects;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.managementofprojects";
+option java_outer_classname = "UserEventsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/managementofprojects/identifiers.proto";
+import "spine/buildtool/speed/managementofprojects/roles.proto";
+import "spine/people/person_name.proto";
+import "spine/time/time.proto";
+import "spine/net/email_address.proto";
+
+message SignedUp {
+
+    UserId id = 1;
+
+    spine.people.PersonName name = 2 [(required) = true];
+
+    spine.net.EmailAddress email = 3 [(required) = true, (validate) = true];
+
+    GoogleUserId google_id = 4;
+}
+
+message SignedIn {
+
+    UserId id = 1;
+}
+
+message UserInvitedToOrganization {
+
+    UserId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+}
+
+message UserRemovedFromOrganization {
+
+    UserId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+}
+
+message UserNameChanged {
+
+    UserId id = 1;
+
+    spine.people.PersonName old_name = 2 [(required) = true];
+
+    spine.people.PersonName new_name = 3 [(required) = true];
+}
+
+message EmailVerified {
+
+    UserId id = 1;
+
+    spine.net.EmailAddress email = 2 [(required) = true, (validate) = true];
+}
+
+message EmailChanged {
+
+    UserId id = 1;
+
+    spine.net.EmailAddress old_email = 2 [(required) = true, (validate) = true];
+
+    spine.net.EmailAddress new_email = 3 [(required) = true, (validate) = true];
+}

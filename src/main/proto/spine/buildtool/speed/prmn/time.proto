@@ -24,61 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
+package spine.buildtool.speed.prmn;
 
-buildscript {
-    standardSpineSdkRepositories()
+import "spine/options.proto";
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
+option java_package = "io.spine.buildtool.speed.prmn";
+option java_outer_classname = "TimeProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+message TimeEstimate {
+
+    oneof kind {
+
+        float duration_hours = 1 [(min).value = "0.5"];
+
+        int32 story_points = 2 [(min).value = "1"];
     }
-
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
-
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
-
-val customConfigFile = "../build-speed.gradle.kts"
-
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
 }

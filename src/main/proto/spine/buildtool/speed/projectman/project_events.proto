@@ -24,61 +24,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.standardToSpineSdk
+syntax = "proto3";
 
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
+package spine.buildtool.speed.projectman;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.projectman";
+option java_outer_classname = "ProjectEventsProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/projectman/identifiers.proto";
+import "spine/buildtool/speed/projectman/roles.proto";
+
+message ProjectCreated {
+
+    OrgId organization = 1;
+
+    ProjectId id = 2;
+
+    string name = 3;
+
+    UserId owner = 4;
+
+    repeated UserId admins = 5;
+
+    repeated UserId members = 6;
 }
 
-buildscript {
-    standardSpineSdkRepositories()
+message ProjectRenamed {
 
-    dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
-    }
+    ProjectId id = 1;
 
-    configurations.all {
-        resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
-        )
-    }
-}
-
-repositories.standardToSpineSdk()
-
-apply(plugin = Spine.McJava.pluginId)
-
-dependencies {
-    implementation(spine.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
-}
-
-val customConfigFile = "../build-speed.gradle.kts"
-
-if (file(customConfigFile).exists()) {
-    apply(from = customConfigFile)
+    string name = 2;
 }
