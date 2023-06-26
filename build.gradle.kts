@@ -31,6 +31,7 @@ plugins {
     java
     id("com.google.protobuf")
     idea
+    id("com.osacky.doctor") version "0.8.1"
 }
 
 buildscript {
