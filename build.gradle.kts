@@ -76,7 +76,7 @@ idea {
     }
 }
 
-val customConfigFile = "../buildperformance.gradle.kts"
+val customConfigFile = "../build-speed.gradle.kts"
 
 if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)

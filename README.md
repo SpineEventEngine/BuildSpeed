@@ -1,4 +1,4 @@
-# BuildPerformance
+# BuildSpeed
 
 This repository contains a set of Protobuf model definitions.
 
@@ -6,7 +6,7 @@ Unlike many other [Spine examples](https://github.com/spine-examples), this repo
 Java or any other implementations. Instead, it focuses on the model definitions, providing
 a sizable amount of various Proto definitions.
 
-Using the definitions in this repo, we can test performance of our build tools, comparing it to
+Using the definitions in this repo, we can test speed of our build tools, comparing it to
 the past performance.
 
 The repo contains 1152 message declarations and 32 enum declarations in 192 `.proto` files.
@@ -27,20 +27,20 @@ To use this repo locally for one-time tests, follow these steps.
 
 ## Using with Gradle
 
-To launch the build performance tests with Gradle, follow these steps.
+To launch the build speed tests with Gradle, follow these steps.
 
 1. Add the repo as a Git submodule to your project.
 2. Create a Gradle task which would call the `substitute-settings.py` script, setting the versions
    to the versions from the local environment:
 ```kotlin
-val prepareBuildPerformanceSettings by tasks.registering(Exec::class) {
+val prepareBuildSpeedSettings by tasks.registering(Exec::class) {
     environment(
         "MC_JAVA_VERSION" to Spine.McJava.version,
         "CORE_VERSION" to Spine.ArtifactVersion.core,
         "PROTO_DATA_VERSION" to ProtoData.version,
         "VALIDATION_VERSION" to Validation.version
     )
-    workingDir = File(rootDir, "BuildPerformance")
+    workingDir = File(rootDir, "BuildSpeed")
     commandLine("./substitute-settings.py")
 }
 ```
@@ -48,19 +48,19 @@ val prepareBuildPerformanceSettings by tasks.registering(Exec::class) {
    Spine dependency versions.
 3. Create a task calls the `build` task on this project:
 ```kotlin
-tasks.register<RunBuild>("checkPerformance") {
-    directory = "$rootDir/BuildPerformance"
+tasks.register<RunBuild>("checkSpeed") {
+    directory = "$rootDir/BuildSpeed"
 
-    dependsOn(prepareBuildPerformanceSettings, localPublish)
+    dependsOn(prepareBuildSpeedSettings, localPublish)
     shouldRunAfter(check)
 }
 ```
-4. Launch the `checkPerformance` task. It's not recommended to include this task into the build
+4. Launch the `checkSpeed` task. It's not recommended to include this task into the build
    by default due to the long execution time. Instead, run it manually when needed and/or launch
    it on CI.
 
 ## Extra Gradle configuration
 
-If the performance tests require additional configuration, e.g. configuring the tested plugins,
-add a file called `buildperformance.gradle.kts` to the root of the project. This script plugin
-will be applied to the `BuildPerformance` project.
+If the speed tests require additional configuration, e.g. configuring the tested plugins,
+add a file called `build-speed.gradle.kts` to the root of the project. This script plugin
+will be applied to the `BuildSpeed` project.
