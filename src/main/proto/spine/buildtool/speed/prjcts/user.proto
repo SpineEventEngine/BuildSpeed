@@ -1,0 +1,68 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtool.speed.prjcts;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.prjcts";
+option java_outer_classname = "UserProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+
+import "spine/buildtool/speed/prjcts/identifiers.proto";
+import "spine/buildtool/speed/prjcts/roles.proto";
+import "spine/people/person_name.proto";
+import "spine/time/time.proto";
+import "spine/net/email_address.proto";
+
+// A user of the project management app.
+message User {
+    option (entity).kind = AGGREGATE;
+
+    UserId id = 1;
+
+    OrgId organization = 2 [(required) = true];
+
+    spine.people.PersonName name = 3 [(required) = true];
+
+    spine.time.ZonedDateTime when_signed_up = 4 [(required) = true];
+
+    spine.time.ZonedDateTime last_login = 5 [(required) = true];
+
+    ContactInfo contact_info = 6 [(required) = true, (validate) = true];
+
+    repeated Role roles = 7 [(validate) = true];
+}
+
+message ContactInfo {
+
+    spine.net.EmailAddress email = 1 [(required) = true, (validate) = true];
+
+    bool verified_email = 2;
+}

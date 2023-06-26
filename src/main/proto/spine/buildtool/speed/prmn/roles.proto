@@ -1,0 +1,79 @@
+/*
+ * Copyright 2023, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+syntax = "proto3";
+
+package spine.buildtool.speed.prmn;
+
+import "spine/options.proto";
+
+option java_package = "io.spine.buildtool.speed.prmn";
+option java_outer_classname = "RolesProto";
+option java_multiple_files = true;
+option (type_url_prefix) = "type.spine.io";
+option (beta_all) = true;
+
+import "google/protobuf/descriptor.proto";
+import "spine/buildtool/speed/prmn/identifiers.proto";
+
+// A role of a user within the organization.
+//
+// A single user may have multiple roles.
+//
+message Role {
+    option (internal_type) = true;
+
+    Access access = 1;
+
+    oneof scope {
+        ProjectId project = 2;
+        TaskId task = 3;
+        bool whole_organization = 4;
+    }
+
+    enum Access {
+
+        ROLE_ACCESS_UNKNOWN = 0;
+
+        HEADMASTER = 1;
+
+        ADMIN = 2;
+
+        EDITOR = 3;
+
+        COMMENTER = 4;
+
+        VIEWER = 5;
+
+        GUEST = 6;
+    }
+}
+
+extend google.protobuf.MessageOptions {
+
+    // A role required for a user to be able to issue a command.
+    Role required_role = 73947;
+}
