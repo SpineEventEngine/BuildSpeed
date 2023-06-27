@@ -26,6 +26,7 @@
 
 package io.spine.internal.gradle
 
+import java.io.File
 import java.time.Instant
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.MapProperty
@@ -33,6 +34,15 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
+/**
+ * This task tracks how long does the execution of the Gradle tasks take and logs the measurement
+ * into a file.
+ *
+ * The tasks uses `journal.log` file in the project root directory. Along with the execution time,
+ * we log the info about the run, such as the versions of Spine dependencies.
+ *
+ * In the journal, one line corresponds to one run.
+ */
 abstract class UpdateJournal : DefaultTask() {
 
     @get:Internal
@@ -47,39 +57,51 @@ abstract class UpdateJournal : DefaultTask() {
 
     @TaskAction
     fun updateJournal() {
-        val endTime = System.currentTimeMillis()
-        val duration = endTime - startTime!!
-        val totalSeconds = duration / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
+        val duration = calculateDuration()
 
-        val readableDuration = "$minutes:$seconds"
-
-        logger.lifecycle("Task execution took $readableDuration.")
+        logger.lifecycle("Task execution took $duration.")
 
         val userName = System.getProperty("user.name")
         val timestamp = Instant.now().toString()
-        val printedVersions = versions
-            .get()
-            .entries
-            .joinToString(";") { (k, v) -> "$k:${v.get()}" }
+        val printedVersions = printVersions()
         val versions = printedVersions
-        val logRecord = "$readableDuration :: $userName :: $timestamp :: $versions"
+        val logRecord = "$duration :: $userName :: $timestamp :: $versions"
 
-        val logFile = project.file("${project.projectDir}/journal.log")
-
-        if (!logFile.exists()) {
-            logFile.createNewFile()
-        }
+        val logFile = prepareFile()
 
         var lines = logFile.readLines().toMutableList()
         if (lines.size > LOG_FILE_MAX_LINES) {
-            lines = lines.subList(lines.size - LOG_FILE_MAX_LINES, lines.size)
+            lines = lines.subList(0, LOG_FILE_MAX_LINES)
         }
         val updatedLines = mutableListOf(logRecord)
         updatedLines.addAll(lines)
         logFile.writeText(updatedLines.joinToString(System.lineSeparator()))
     }
+
+    private fun prepareFile(): File {
+        val logFile = project.file("${project.projectDir}/journal.log")
+        if (!logFile.exists()) {
+            logFile.createNewFile()
+        }
+        return logFile
+    }
+
+    private fun printVersions() = versions
+        .get()
+        .entries
+        .joinToString(";") { (k, v) -> "$k:${v.get()}" }
+
+    private fun calculateDuration(): String {
+        val endTime = System.currentTimeMillis()
+        val duration = endTime - startTime!!
+        val totalSeconds = duration / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return "$minutes:$seconds"
+    }
 }
 
+/**
+ * The maximum number of history lines kept in the journal.
+ */
 private const val LOG_FILE_MAX_LINES = 500
