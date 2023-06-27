@@ -87,6 +87,7 @@ gcs-auth-key.json
 
 # Log files
 *.log
+!journal.log
 
 # Package Files #
 *.war

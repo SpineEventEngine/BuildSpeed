@@ -25,7 +25,10 @@
  */
 
 import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.base.build
 import io.spine.internal.gradle.standardToSpineSdk
+import java.lang.System.lineSeparator
+import java.time.Instant
 
 plugins {
     java
@@ -81,4 +84,55 @@ val customConfigFile = "../build-speed.gradle.kts"
 
 if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)
+}
+
+var startTime: Long? = null
+
+afterEvaluate {
+    startTime = System.currentTimeMillis()
+}
+
+@Suppress("PropertyName")
+val LOG_FILE_MAX_LINES = 500
+
+val recordExecTime by tasks.registering {
+    outputs.upToDateWhen { false }
+
+    doLast {
+        val endTime = System.currentTimeMillis()
+        val duration = endTime - startTime!!
+        val totalSeconds = duration / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+
+        val readableDuration = "$minutes:$seconds"
+
+        System.out.println("Task execution took $readableDuration.")
+
+        val userName = System.getProperty("user.name")
+        val timestamp = Instant.now().toString()
+        val versions = "core:${spine.versions.core.get()};" +
+                "ProtoData:${spine.versions.protoData.get()};" +
+                "Validation:${spine.versions.validation.get()};" +
+                "mc-java:${spine.versions.mcJava.get()}"
+        val logRecord = "$readableDuration :: $userName :: $timestamp :: $versions"
+
+        val logFile = file("$projectDir/journal.log")
+
+        if (!logFile.exists()) {
+            logFile.createNewFile()
+        }
+
+        var lines = logFile.readLines().toMutableList()
+        if (lines.size > LOG_FILE_MAX_LINES) {
+            lines = lines.subList(lines.size - LOG_FILE_MAX_LINES, lines.size)
+        }
+        val updatedLines = mutableListOf(logRecord)
+        updatedLines.addAll(lines)
+        logFile.writeText(updatedLines.joinToString(lineSeparator()))
+    }
+}
+
+tasks.build {
+    finalizedBy(recordExecTime)
 }
