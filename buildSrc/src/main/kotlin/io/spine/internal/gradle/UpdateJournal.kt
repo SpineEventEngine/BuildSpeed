@@ -53,6 +53,8 @@ abstract class UpdateJournal : DefaultTask() {
 
     init {
         outputs.upToDateWhen { false }
+        val cleanTask = project.tasks.getByName("clean")
+        this.dependsOn(cleanTask)
     }
 
     @TaskAction
