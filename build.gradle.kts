@@ -85,6 +85,20 @@ if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)
 }
 
+/**
+ * Set up the `recordExecTime` task that logs the execution time of the build.
+ *
+ * In order to record the true time of Gradle's task execution phase, we obtain the current time
+ * in the `afterEvaluate` block in this script. This start time is passed to the task.
+ * The task calculates the execution time and stores this info in a journal file.
+ *
+ * `recordExecTime` runs each time `build` is called. When adding `BuildSpeed` as a submodule,
+ * this behavior should be replicated, so that the developers don't have to think about
+ * launching it.
+ *
+ * To avoid running the task upon build, run `assemble` and `check` as needed.
+ */
+
 var startTimeMillis: Long? = null
 
 afterEvaluate {
