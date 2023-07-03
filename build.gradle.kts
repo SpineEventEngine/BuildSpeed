@@ -25,6 +25,8 @@
  */
 
 import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.UpdateJournal
+import io.spine.internal.gradle.base.build
 import io.spine.internal.gradle.standardToSpineSdk
 
 plugins {
@@ -81,4 +83,35 @@ val customConfigFile = "../build-speed.gradle.kts"
 
 if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)
+}
+
+/**
+ * Set up the `recordExecTime` task that logs the execution time of the build.
+ *
+ * In order to record the true time of Gradle's task execution phase, we obtain the current time
+ * in the `afterEvaluate` block in this script. This start time is passed to the task.
+ * The task calculates the execution time and stores this info in a journal file.
+ *
+ * `recordExecTime` runs each time `build` is called.
+ */
+
+var startTimeMillis: Long? = null
+
+afterEvaluate {
+    startTimeMillis = System.currentTimeMillis()
+}
+
+val recordExecTime by tasks.registering(UpdateJournal::class) {
+    startTime = startTimeMillis
+    versions.putAll(
+        mapOf(
+            "core" to spine.versions.core,
+            "ProtoData" to spine.versions.protoData,
+            "Validation" to spine.versions.validation,
+            "mc-java" to spine.versions.mcJava
+        )
+    )
+}
+tasks.build {
+    finalizedBy(recordExecTime)
 }
