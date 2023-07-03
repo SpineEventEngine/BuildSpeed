@@ -73,8 +73,12 @@ abstract class UpdateJournal : DefaultTask() {
         if (lines.size > LOG_FILE_MAX_LINES) {
             lines = lines.subList(0, LOG_FILE_MAX_LINES)
         }
-        val updatedLines = mutableListOf(logRecord)
-        updatedLines.addAll(lines)
+        val updatedLines = lines.toMutableList()
+
+        val headingComment = lines.takeWhile { it.startsWith("#") }
+        val commentSize = headingComment.size
+        updatedLines.add(commentSize, logRecord)
+
         logFile.writeText(updatedLines.joinToString(System.lineSeparator()))
     }
 
