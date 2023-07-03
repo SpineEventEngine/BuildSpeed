@@ -64,3 +64,13 @@ tasks.register<RunBuild>("checkSpeed") {
 If the speed tests require additional configuration, e.g. configuring the tested plugins,
 add a file called `build-speed.gradle.kts` to the root of the project. This script plugin
 will be applied to the `BuildSpeed` project.
+
+## The journal file
+
+This repository stores the `journal.log` file and updates it upon each `build`. This file contains
+info about the past builds, the speed of the task execution, the versions of Spine dependencies,
+the username (for specifying the machine which ran the build).
+
+The journal file should be kept in the Git repository. If this repo is included as a submodule into
+another repo and needs updating, the journal file should be preserved in its local form, so that
+less relevant build history doesn't overwrite the local build history.
