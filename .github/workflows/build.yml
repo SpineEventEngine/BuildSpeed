@@ -21,7 +21,6 @@ jobs:
         with:
           java-version: 11
           distribution: zulu
-          cache: gradle
 
       - name: Substitute Gradle settings file
         shell: bash
