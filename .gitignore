@@ -108,5 +108,5 @@ pubspec.lock
 # Ignore `settings.gradle.kts` after creation at the usage sites.
 settings.gradle.kts
 
-# Ignore `_out` directory containing log files.
+# Ignore `_out` directory containing log files from being visible at usage sites.
 _out
