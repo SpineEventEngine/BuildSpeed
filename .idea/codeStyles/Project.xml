@@ -84,9 +84,6 @@
         </groups>
       </arrangement>
     </codeStyleSettings>
-    <codeStyleSettings language="Python">
-      <option name="RIGHT_MARGIN" value="79" />
-    </codeStyleSettings>
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
     </codeStyleSettings>

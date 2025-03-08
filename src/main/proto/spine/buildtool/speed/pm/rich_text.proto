@@ -67,7 +67,7 @@ message Font {
         spine.net.Url ttf_url = 2;
     }
 
-    int32 size = 3 [(range) = "[8..32]"];
+    int32 size = 3 [(range).value = "[8..32]"];
 }
 
 message Style {

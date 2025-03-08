@@ -46,7 +46,6 @@ message Task {
     option (entity).kind = AGGREGATE;
     option (is) = {
         java_type: "TaskMixin"
-        generate: true
     };
 
     TaskId id = 1;

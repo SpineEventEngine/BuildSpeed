@@ -75,5 +75,9 @@ message Role {
 extend google.protobuf.MessageOptions {
 
     // A role required for a user to be able to issue a command.
-    Role required_role = 73947;
+    //
+    // See `options.proto` docs for the range of options used by Spine.
+    // Please also coordinate numbers with other `roles.proto` files in this project.
+    //
+    Role required_role = 74996;
 }

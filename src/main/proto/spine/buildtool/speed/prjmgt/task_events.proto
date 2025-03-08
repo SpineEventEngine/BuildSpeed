@@ -42,9 +42,7 @@ import "spine/buildtool/speed/prjmgt/time.proto";
 import "spine/buildtool/speed/prjmgt/rich_text.proto";
 import "spine/buildtool/speed/prjmgt/roles.proto";
 import "spine/time/time.proto";
-import "spine/time_options.proto";
 import "spine/net/url.proto";
-import "google/protobuf/duration.proto";
 
 message TaskCreated {
     option (required_role) = {

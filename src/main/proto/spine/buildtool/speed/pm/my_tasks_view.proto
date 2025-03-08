@@ -36,7 +36,6 @@ option java_multiple_files = true;
 option (type_url_prefix) = "type.spine.io";
 
 import "spine/buildtool/speed/pm/identifiers.proto";
-import "spine/buildtool/speed/pm/rich_text.proto";
 import "spine/buildtool/speed/pm/task.proto";
 import "spine/buildtool/speed/pm/label.proto";
 import "spine/people/person_name.proto";
