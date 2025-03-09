@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,10 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.UpdateJournal
-import io.spine.internal.gradle.base.build
-import io.spine.internal.gradle.standardToSpineSdk
+import io.spine.dependency.local.McJava
+import io.spine.dependency.local.ProtoData
+import io.spine.dependency.local.CoreJava
+import io.spine.dependency.local.Validation
+import io.spine.gradle.UpdateJournal
+import io.spine.gradle.base.build
+import io.spine.gradle.standardToSpineSdk
+import java.util.function.Supplier
 
 plugins {
     java
@@ -40,33 +44,34 @@ buildscript {
     standardSpineSdkRepositories()
 
     dependencies {
-        classpath(variantOf(spine.mcJava) { classifier("all") })
+        classpath(mcJava.pluginLib(mcJava.version))
     }
 
     configurations.all {
         resolutionStrategy.force(
-            spine.protoData.plugin,
-            spine.protoData.compiler,
-            spine.protoData.codegenJava,
-            spine.validation.codegenJava,
+            protoData.pluginLib,
+            protoData.backend,
+            protoData.java,
+            validation.java,
+            validation.javaBundle,
         )
     }
 }
 
 repositories.standardToSpineSdk()
 
-apply(plugin = Spine.McJava.pluginId)
+apply(plugin = McJava.pluginId)
 
 dependencies {
-    implementation(spine.server)
+    implementation(CoreJava.server)
 }
 
 configurations.all {
     resolutionStrategy.force(
-        spine.protoData.compiler,
-        spine.protoData.codegenJava,
-        spine.validation.codegenJava,
-        spine.validation.runtimeJava,
+        ProtoData.backend,
+        ProtoData.java,
+        Validation.java,
+        Validation.runtime,
     )
 }
 
@@ -102,13 +107,13 @@ afterEvaluate {
 }
 
 val recordExecTime by tasks.registering(UpdateJournal::class) {
-    startTime = startTimeMillis
-    versions.putAll(
+    startTime = Supplier { startTimeMillis!! }
+    versions.set(
         mapOf(
-            "core" to spine.versions.core,
-            "ProtoData" to spine.versions.protoData,
-            "Validation" to spine.versions.validation,
-            "mc-java" to spine.versions.mcJava
+            "core" to CoreJava.version,
+            "ProtoData" to ProtoData.version,
+            "Validation" to Validation.version,
+            "mc-java" to McJava.version
         )
     )
 }

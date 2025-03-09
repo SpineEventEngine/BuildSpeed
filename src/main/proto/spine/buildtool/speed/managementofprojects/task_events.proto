@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -43,9 +43,7 @@ import "spine/buildtool/speed/managementofprojects/time.proto";
 import "spine/buildtool/speed/managementofprojects/rich_text.proto";
 import "spine/buildtool/speed/managementofprojects/roles.proto";
 import "spine/time/time.proto";
-import "spine/time_options.proto";
 import "spine/net/url.proto";
-import "google/protobuf/duration.proto";
 
 message TaskCreated {
     option (required_role) = {

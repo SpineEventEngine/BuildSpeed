@@ -43,7 +43,6 @@ import "spine/buildtool/speed/pm/rich_text.proto";
 import "spine/buildtool/speed/pm/roles.proto";
 import "spine/time/time.proto";
 import "spine/net/url.proto";
-import "google/protobuf/duration.proto";
 
 message CreateTask {
     option (required_role) = {
