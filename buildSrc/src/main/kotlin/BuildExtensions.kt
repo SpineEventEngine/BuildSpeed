@@ -31,6 +31,7 @@ import io.spine.dependency.build.GradleDoctor
 import io.spine.dependency.build.Ksp
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.McJava
+import io.spine.dependency.local.Validation
 import io.spine.dependency.local.ProtoData
 import io.spine.dependency.local.ProtoTap
 import io.spine.dependency.test.Kotest
@@ -82,6 +83,12 @@ val ScriptHandlerScope.mcJava: McJava
     get() = McJava
 
 /**
+ * Shortcut to [Validation] dependency object for using under `buildScript`.
+ */
+val ScriptHandlerScope.validation: Validation
+    get() = Validation
+
+/**
  * Shortcut to [McJava] dependency object.
  *
  * This plugin is not published to Gradle Portal and cannot be applied directly to a project.
@@ -102,7 +109,7 @@ val ScriptHandlerScope.protoData: ProtoData
  * This plugin is published at Gradle Plugin Portal.
  * But when used in a pair with [mcJava], it cannot be applied directly to a project.
  * It is so, because [mcJava] uses [protoData] as its dependency.
- * And buildscript's classpath ends up with both of them.
+ * And the buildscript's classpath ends up with both of them.
  */
 val PluginDependenciesSpec.protoData: ProtoData
     get() = ProtoData
