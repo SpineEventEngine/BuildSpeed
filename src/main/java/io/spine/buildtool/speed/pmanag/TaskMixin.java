@@ -26,7 +26,5 @@
 
 package io.spine.buildtool.speed.pmanag;
 
-import io.spine.annotation.GeneratedMixin;
-
 public interface TaskMixin {
 }

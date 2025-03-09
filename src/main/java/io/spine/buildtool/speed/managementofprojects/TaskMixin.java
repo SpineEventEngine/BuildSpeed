@@ -26,9 +26,5 @@
 
 package io.spine.buildtool.speed.managementofprojects;
 
-import io.spine.annotation.GeneratedMixin;
-import io.spine.buildtool.speed.prjmgt.TaskId;
-import io.spine.buildtool.speed.prjmgt.TaskOrBuilder;
-
 public interface TaskMixin {
 }
