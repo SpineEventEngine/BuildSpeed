@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.local.Spine
 import io.spine.dependency.local.McJava
 import io.spine.dependency.local.ProtoData
 import io.spine.dependency.local.CoreJava
@@ -44,9 +43,6 @@ plugins {
 buildscript {
     standardSpineSdkRepositories()
 
-    val protoData = io.spine.dependency.local.ProtoData
-    val validation = io.spine.dependency.local.Validation
-    val mcJava = io.spine.dependency.local.McJava
     dependencies {
         classpath(mcJava.pluginLib(mcJava.version))
     }
