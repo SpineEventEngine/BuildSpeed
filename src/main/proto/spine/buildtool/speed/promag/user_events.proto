@@ -38,7 +38,6 @@ option (type_url_prefix) = "type.spine.io";
 import "spine/buildtool/speed/promag/identifiers.proto";
 import "spine/buildtool/speed/promag/roles.proto";
 import "spine/people/person_name.proto";
-import "spine/time/time.proto";
 import "spine/net/email_address.proto";
 
 message SignedUp {

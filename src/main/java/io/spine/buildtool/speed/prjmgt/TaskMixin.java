@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,59 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-syntax = "proto3";
+package io.spine.buildtool.speed.prjmgt;
 
-package spine.buildtool.speed.promag;
-
-import "spine/options.proto";
-
-option java_package = "io.spine.buildtool.speed.promag";
-option java_outer_classname = "TaskRejections";
-option java_multiple_files = false;
-option (type_url_prefix) = "type.spine.io";
-
-import "spine/buildtool/speed/promag/identifiers.proto";
-
-message CannotCommentClosedTask {
-
-    TaskId id = 1;
-
-    OrgId organization = 2 [(required) = true];
-}
-
-message CannotDeleteOtherUsersComment {
-
-    OrgId organization = 1 [(required) = true];
-
-    CommentId id = 2 [(required) = true];
-}
-
-message CannotEditOtherUsersComment {
-
-    OrgId organization = 1 [(required) = true];
-
-    CommentId id = 2 [(required) = true];
-}
-
-message TaskDoesNotExist {
-
-    OrgId organization = 1 [(required) = true];
-
-    TaskId id = 2 [(required) = true];
-}
-
-message LabelDoesNotExist {
-
-    OrgId organization = 1 [(required) = true];
-
-    LabelId id = 2 [(required) = true];
-}
-
-message LabelAlreadyExists {
-
-    LabelId id = 1;
-
-    OrgId organization = 2;
-
-    string name = 3;
+public interface TaskMixin {
 }

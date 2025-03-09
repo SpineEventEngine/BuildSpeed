@@ -28,6 +28,7 @@ package io.spine.gradle
 
 import java.io.File
 import java.time.Instant
+import java.util.function.Supplier
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Provider
@@ -46,7 +47,7 @@ import org.gradle.api.tasks.TaskAction
 abstract class UpdateJournal : DefaultTask() {
 
     @get:Internal
-    var startTime: Long? = null
+    var startTime: Supplier<Long>? = null
 
     @get:Internal
     abstract val versions: MapProperty<String, String>
@@ -97,7 +98,7 @@ abstract class UpdateJournal : DefaultTask() {
 
     private fun calculateDuration(): String {
         val endTime = System.currentTimeMillis()
-        val duration = endTime - startTime!!
+        val duration = endTime - startTime!!.get()
         val totalSeconds = duration / 1000
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60

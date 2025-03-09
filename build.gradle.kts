@@ -32,6 +32,7 @@ import io.spine.dependency.local.Validation
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.base.build
 import io.spine.gradle.standardToSpineSdk
+import java.util.function.Supplier
 
 plugins {
     java
@@ -110,7 +111,7 @@ afterEvaluate {
 }
 
 val recordExecTime by tasks.registering(UpdateJournal::class) {
-    startTime = startTimeMillis
+    startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
             "core" to CoreJava.version,
