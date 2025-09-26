@@ -56,9 +56,9 @@ plugins {
     id("com.osacky.doctor") version "0.8.1"
 }
 
-repositories.standardToSpineSdk()
-
 apply(plugin = CoreJvmCompiler.pluginId)
+
+repositories.standardToSpineSdk()
 
 dependencies {
     implementation(CoreJvm.server)
