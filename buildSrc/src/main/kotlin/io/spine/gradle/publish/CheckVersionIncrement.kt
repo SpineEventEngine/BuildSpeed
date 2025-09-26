@@ -28,8 +28,9 @@ package io.spine.gradle.publish
 
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import io.spine.gradle.Repository
+import io.spine.gradle.repo.Repository
 import java.io.FileNotFoundException
+import java.net.URI
 import java.net.URL
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -58,10 +59,11 @@ open class CheckVersionIncrement : DefaultTask() {
     @TaskAction
     fun fetchAndCheck() {
         val artifact = "${project.artifactPath()}/${MavenMetadata.FILE_NAME}"
-        checkInRepo(repository.snapshots, artifact)
+        val snapshots = repository.target(snapshots = true)
+        checkInRepo(snapshots, artifact)
 
-        if (repository.releases != repository.snapshots) {
-            checkInRepo(repository.releases, artifact)
+        if (!repository.hasOneTarget()) {
+            checkInRepo(repository.target(snapshots = false), artifact)
         }
     }
 
@@ -74,16 +76,16 @@ open class CheckVersionIncrement : DefaultTask() {
                     """
                     The version `$version` is already published to the Maven repository `$repoUrl`.
                     Try incrementing the library version.
-                    All available versions are: ${versions?.joinToString(separator = ", ")}. 
-                    
-                    To disable this check, run Gradle with `-x $name`. 
+                    All available versions are: ${versions?.joinToString(separator = ", ")}.
+
+                    To disable this check, run Gradle with `-x $name`.
                     """.trimIndent()
             )
         }
     }
 
     private fun fetch(repository: String, artifact: String): MavenMetadata? {
-        val url = URL("$repository/$artifact")
+        val url = URI("$repository/$artifact").toURL()
         return MavenMetadata.fetchAndParse(url)
     }
 
@@ -135,7 +137,7 @@ private data class MavenMetadata(var versioning: Versioning = Versioning()) {
             return try {
                 val metadata = mapper.readValue(url, MavenMetadata::class.java)
                 metadata
-            } catch (ignored: FileNotFoundException) {
+            } catch (_: FileNotFoundException) {
                 null
             }
         }

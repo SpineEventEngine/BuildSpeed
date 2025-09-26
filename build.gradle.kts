@@ -24,54 +24,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.local.McJava
-import io.spine.dependency.local.ProtoData
-import io.spine.dependency.local.CoreJava
+import io.spine.dependency.local.Compiler
+import io.spine.dependency.local.CoreJvm
+import io.spine.dependency.local.CoreJvmCompiler
 import io.spine.dependency.local.Validation
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.base.build
-import io.spine.gradle.standardToSpineSdk
+import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
+
+buildscript {
+    standardSpineSdkRepositories()
+
+    configurations.all {
+        resolutionStrategy.force(
+            spineCompiler.pluginLib,
+            spineCompiler.backend,
+            spineCompiler.jvm,
+//            validation.java,
+//            validation.javaBundle,
+        )
+    }
+
+    dependencies {
+        coreJvmCompiler.run {
+            classpath(pluginLib(version))
+        }
+    }
+}
 
 plugins {
     java
     id("com.google.protobuf")
     idea
     id("com.osacky.doctor") version "0.8.1"
-}
-
-buildscript {
-    standardSpineSdkRepositories()
-
-    dependencies {
-        classpath(mcJava.pluginLib(mcJava.version))
-    }
-
-    configurations.all {
-        resolutionStrategy.force(
-            protoData.pluginLib,
-            protoData.backend,
-            protoData.java,
-            validation.java,
-            validation.javaBundle,
-        )
-    }
+    id("io.spine.core-jvm") version "2.0.0-SNAPSHOT.006"
 }
 
 repositories.standardToSpineSdk()
 
-apply(plugin = McJava.pluginId)
+//apply(plugin = CoreJvmCompiler.pluginId)
 
 dependencies {
-    implementation(CoreJava.server)
+    implementation(CoreJvm.server)
 }
 
 configurations.all {
     resolutionStrategy.force(
-        ProtoData.backend,
-        ProtoData.java,
-        Validation.java,
-        Validation.runtime,
+        Compiler.backend,
+        Compiler.jvm,
+//        Validation.java,
+//        Validation.runtime,
     )
 }
 
@@ -110,10 +113,10 @@ val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
-            "core" to CoreJava.version,
-            "ProtoData" to ProtoData.version,
+            "Compiler" to Compiler.version,
+            "CoreJvmCompiler" to CoreJvmCompiler.version,
+            "CoreJvm" to CoreJvm.version,
             "Validation" to Validation.version,
-            "mc-java" to McJava.version
         )
     )
 }

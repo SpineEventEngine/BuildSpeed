@@ -24,6 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@file:Suppress("unused", "UnusedReceiverParameter") /* Extensions declared in this file
+ are used in the modules that build proto files without using the Spine Compiler. */
+
 package io.spine.gradle.protobuf
 
 import com.google.protobuf.gradle.GenerateProtoTask
@@ -34,6 +37,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
+import kotlin.io.path.Path
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -105,10 +109,10 @@ private fun GenerateProtoTask.generatedDir(language: String = ""): File {
 fun GenerateProtoTask.setup() {
     builtins.maybeCreate("kotlin")
     setupDescriptorSetFileCreation()
+    excludeProtocOutput()
     doLast {
         copyGeneratedFiles()
     }
-    excludeProtocOutput()
     setupKotlinCompile()
     dependOnProcessResourcesTask()
     makeDirsForIdeaModule()
@@ -225,21 +229,34 @@ private fun GenerateProtoTask.deleteComGoogle(language: String) {
  */
 fun GenerateProtoTask.excludeProtocOutput() {
     val protocOutputDir = File(outputBaseDir).parentFile
+
+    /**
+     * Filter out directories belonging to `build/generated/source/proto`.
+     */
+    fun filterFor(directorySet: SourceDirectorySet) {
+        val newSourceDirectories = directorySet.sourceDirectories
+            .filter { !it.residesIn(protocOutputDir) }
+            .toSet()
+        // Make sure we start from scratch.
+        // Not doing this failed the following, real, assignment sometimes.
+        directorySet.setSrcDirs(listOf<String>())
+        directorySet.srcDirs(newSourceDirectories)
+    }
+
     val java: SourceDirectorySet = sourceSet.java
-
-    // Filter out directories belonging to `build/generated/source/proto`.
-    val newSourceDirectories = java.sourceDirectories
-        .filter { !it.residesIn(protocOutputDir) }
-        .toSet()
-    // Make sure we start from scratch.
-    // Not doing this failed the following, real, assignment sometimes.
-    java.setSrcDirs(listOf<String>())
-    java.srcDirs(newSourceDirectories)
-
+    filterFor(java)
     // Add copied files to the Java source set.
     java.srcDir(generatedDir("java"))
-    java.srcDir(generatedDir("kotlin"))
+
+    val kotlin = sourceSet.kotlin
+    filterFor(kotlin)
+    // Add copied files to the Kotlin source set.
+    kotlin.srcDir(generatedDir("kotlin"))
 }
+
+private val SourceSet.kotlin: SourceDirectorySet get() =
+    (this as org.gradle.api.plugins.ExtensionAware).extensions.getByName("kotlin")
+            as SourceDirectorySet
 
 /**
  * Make sure Kotlin compilation explicitly depends on this `GenerateProtoTask` to avoid racing.
@@ -326,17 +343,41 @@ fun IdeaModule.printSourceDirectories() {
 }
 
 /**
+ * Obtains the extension of Protobuf Gradle Plugin in the given project.
+ */
+val Project.protobufExtension: ProtobufExtension?
+    get() = extensions.findByType(ProtobufExtension::class.java)
+
+/**
  * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
  *
- * The directory is fixed to be `$buildDir/generated/source/proto` and cannot be
- * changed by the settings of the plugin. Even though [ProtobufExtension] has a property
+ * The directory is fixed to be `$buildDir/generated/source/proto` in versions pre v0.9.5
+ * and cannot be changed by the settings of the plugin.
+ * In the v0.9.5 the path was changed to
+ * [`$buildDir/generated/sources/proto`](https://github.com/google/protobuf-gradle-plugin/releases/tag/v0.9.5).
+ *
+ * Even though [ProtobufExtension] has a property
  * [generatedFilesBaseDir][ProtobufExtension.getGeneratedFilesBaseDir], which is supposed
- * to be used for this purpose, it is declared with `@PackageScope` and thus cannot be
- * accessed from outside the plugin. The Protobuf Gradle Plugin (at v0.9.2) does not
- * modify the value of the property either.
+ * to be used for this purpose, it is declared with `@PackageScope` (again in earlier versions)
+ * and thus cannot be accessed from outside the plugin.
+ * The Protobuf Gradle Plugin (at v0.9.2) does not modify the value of the property either.
+ * Therefore, we try getting the path using the newer version API and resort to the "legacy"
+ * convention if the call fails.
  */
 val Project.generatedSourceProtoDir: Path
-    get() = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
+    get() {
+        val legacyPath = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
+        protobufExtension?.let {
+            return try {
+                it.generatedFilesBaseDir.let { Path(it) }
+            } catch (_: Throwable) {
+                // Probably we're running on an older version of the Protobuf Gradle Plugin
+                // which has `package-access` for the `getGeneratedFilesDir()` method.
+                legacyPath
+            }
+        }
+        return legacyPath
+    }
 
 /**
  * Ensures that the sources generated by Protobuf Gradle Plugin

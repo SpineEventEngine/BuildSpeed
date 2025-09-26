@@ -55,7 +55,6 @@ package io.spine.dependency.local
     "unused" /* Some subprojects do not use ProtoData directly. */,
     "ConstPropertyName" /* We use custom convention for artifact properties. */,
     "MemberVisibilityCanBePrivate" /* The properties are used directly by other subprojects. */,
-    "KDocUnresolvedReference" /* Referencing private properties in constructor KDoc. */
 )
 object ProtoData {
     const val pluginGroup = Spine.group
@@ -73,7 +72,7 @@ object ProtoData {
      * The version of ProtoData dependencies.
      */
     val version: String
-    private const val fallbackVersion = "0.92.11"
+    private const val fallbackVersion = "0.96.4"
 
     /**
      * The distinct version of ProtoData used by other build tools.
@@ -82,7 +81,7 @@ object ProtoData {
      * transitional dependencies, this is the version used to build the project itself.
      */
     val dogfoodingVersion: String
-    private const val fallbackDfVersion = "0.92.11"
+    private const val fallbackDfVersion = "0.96.4"
 
     /**
      * The artifact for the ProtoData Gradle plugin.
@@ -164,10 +163,10 @@ object ProtoData {
                 -----------------------------------------
                     Regular version     = v$version
                     Dogfooding version  = v$dogfoodingVersion
-                
+
                     ProtoData Gradle plugin can now be loaded from Maven Local.
-                    
-                    To reset the versions, erase the `$$VERSION_ENV` and `$$DF_VERSION_ENV` environment variables. 
+
+                    To reset the versions, erase the `$$VERSION_ENV` and `$$DF_VERSION_ENV` environment variables.
 
             """.trimIndent())
         } else {

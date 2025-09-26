@@ -57,7 +57,8 @@ import org.gradle.api.plugins.BasePlugin
  *
  * By default, those values are taken from the `project` object, which may or may not include
  * them. If the project does not have these values, and they are not specified in the `ext`
- * block, the resulting `pom.xml` file is going to contain empty blocks, e.g. `<groupId></groupId>`.
+ * block, the resulting `pom.xml` file is going to contain empty blocks,
+ * e.g., `<groupId></groupId>`.
  */
 @Suppress("unused")
 object PomGenerator {
@@ -68,8 +69,11 @@ object PomGenerator {
     fun applyTo(project: Project) {
 
         /**
-         * In some cases, the `base` plugin, which is by default is added by e.g. `java`,
-         * is not yet added. `base` plugin defines the `build` task. This generator needs it.
+         * In some cases, the `base` plugin, which by default is added by e.g. `java`,
+         * is not yet added.
+         *
+         * The `base` plugin defines the `build` task.
+         * This generator needs it.
          */
         project.apply {
             plugin(BasePlugin::class.java)

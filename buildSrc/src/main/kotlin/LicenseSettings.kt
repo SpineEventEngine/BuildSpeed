@@ -24,25 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.dependency.local
-
 /**
- * Dependencies on `core-java` modules.
+ * The settings of the software license which apply to the code of this project.
  *
- * See [`SpineEventEngine/core-java`](https://github.com/SpineEventEngine/core-java/).
+ * The constants defined in this object are used by the
+ * [PublicationHandler][io.spine.gradle.publish.PublicationHandler] to set up
+ * corresponding properties of the published `pom.xml` file of an artifact.
+ *
+ * So, in order to adapt the license settings to the requirements of a particular project,
+ * simply change the values of the constants defined in this object.
+ *
+ * @see io.spine.gradle.publish.PublicationHandler
  */
-@Suppress("ConstPropertyName", "unused")
-object CoreJava {
-    const val group = Spine.group
-    const val version = "2.0.0-SNAPSHOT.201"
-
-    const val coreArtifact = "spine-core"
-    const val clientArtifact = "spine-client"
-    const val serverArtifact = "spine-server"
-
-    const val core = "$group:$coreArtifact:$version"
-    const val client = "$group:$clientArtifact:$version"
-    const val server = "$group:$serverArtifact:$version"
-
-    const val testUtilServer = "${Spine.toolsGroup}:spine-testutil-server:$version"
+@Suppress("ConstPropertyName", "unused") // https://bit.ly/kotlin-prop-names
+object LicenseSettings {
+    const val name = "The Apache License, Version 2.0"
+    const val url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
 }

@@ -28,7 +28,6 @@ package io.spine.gradle.checkstyle
 
 import io.spine.dependency.build.CheckStyle
 import org.gradle.api.Project
-import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
 import org.gradle.kotlin.dsl.the
@@ -57,7 +56,7 @@ object CheckStyleConfig {
             plugin(CheckstylePlugin::class.java)
         }
 
-        val configDir = project.rootDir.resolve("config/quality/")
+        val configDir = project.rootDir.resolve("buildSrc/quality/")
 
         with(project.the<CheckstyleExtension>()) {
             toolVersion = CheckStyle.version
@@ -65,9 +64,13 @@ object CheckStyleConfig {
         }
 
         project.afterEvaluate {
-            // Disables checking the test sources.
-            val checkstyleTest = project.tasks.findByName("checkstyleTest") as Checkstyle
-            checkstyleTest.enabled = false
+            // Disables checking the test sources and test fixtures.
+            arrayOf(
+                "checkstyleTest",
+                "checkstyleTestFixtures"
+            ).forEach {
+                task -> tasks.findByName(task)?.enabled = false
+            }
         }
     }
 }
