@@ -41,15 +41,11 @@ buildscript {
             spineCompiler.pluginLib,
             spineCompiler.backend,
             spineCompiler.jvm,
-//            validation.java,
-//            validation.javaBundle,
         )
     }
 
     dependencies {
-        coreJvmCompiler.run {
-            classpath(pluginLib(version))
-        }
+        classpath(coreJvmCompiler.pluginLib)
     }
 }
 
@@ -58,12 +54,11 @@ plugins {
     id("com.google.protobuf")
     idea
     id("com.osacky.doctor") version "0.8.1"
-    id("io.spine.core-jvm") version "2.0.0-SNAPSHOT.006"
 }
 
 repositories.standardToSpineSdk()
 
-//apply(plugin = CoreJvmCompiler.pluginId)
+apply(plugin = CoreJvmCompiler.pluginId)
 
 dependencies {
     implementation(CoreJvm.server)
