@@ -35,7 +35,7 @@ import java.util.function.Supplier
 
 buildscript {
     standardSpineSdkRepositories()
-
+    apply(from = "$rootDir/../version.gradle.kts")
     configurations.all {
         resolutionStrategy.force(
             spineCompiler.pluginLib,
@@ -43,9 +43,12 @@ buildscript {
             spineCompiler.jvm,
         )
     }
+    var coreJvmCompilerVersion: String by extra
 
+    val pluginLib = coreJvmCompiler.pluginLib(coreJvmCompilerVersion)
+    println("****** CoreJvm Compiler plugin: $pluginLib")
     dependencies {
-        classpath(coreJvmCompiler.pluginLib)
+        classpath(pluginLib)
     }
 }
 
