@@ -34,7 +34,7 @@ package io.spine.dependency.local
 @Suppress("ConstPropertyName", "unused")
 object ToolBase {
     const val group = "io.spine.tools"
-    const val version = "2.0.0-SNAPSHOT.355"
+    const val version = "2.0.0-SNAPSHOT.356"
 
     const val lib = "$group:tool-base:$version"
     const val pluginBase = "$group:plugin-base:$version"
@@ -50,6 +50,7 @@ object ToolBase {
     const val gradlePluginApi = "$group:gradle-plugin-api:$version"
     const val gradlePluginApiTestFixtures = "$group:gradle-plugin-api-test-fixtures:$version"
 
+    const val rootPlugins = "$group:root-gradle-plugins:$version"
     const val jvmTools = "$group:jvm-tools:$version"
     const val jvmToolPlugins = "$group:jvm-tool-all-plugins:$version"
 
