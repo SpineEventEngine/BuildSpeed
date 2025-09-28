@@ -26,7 +26,6 @@
 
 package io.spine.gradle.testing
 
-import io.spine.gradle.publish.testJar
 import org.gradle.api.Project
 
 /**
@@ -68,8 +67,5 @@ fun Project.exposeTestConfiguration() {
 
     configurations.create("testArtifacts") {
         extendsFrom(configurations.getByName("testRuntimeClasspath"))
-        outgoing {
-            artifact(testJar())
-        }
     }
 }
