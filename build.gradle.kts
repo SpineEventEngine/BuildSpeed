@@ -35,24 +35,16 @@ import java.util.function.Supplier
 
 buildscript {
     standardSpineSdkRepositories()
-
-    configurations.all {
-        resolutionStrategy.force(
-            spineCompiler.pluginLib,
-            spineCompiler.backend,
-            spineCompiler.jvm,
-        )
-    }
-
+    apply(from = "$rootDir/../version.gradle.kts")
+    val coreJvmCompilerVersion: String by extra
     dependencies {
-        classpath(coreJvmCompiler.pluginLib)
+        classpath(coreJvmCompiler.pluginLib(coreJvmCompilerVersion))
     }
 }
 
 plugins {
     java
     id("com.google.protobuf")
-    idea
     id("com.osacky.doctor") version "0.8.1"
 }
 
@@ -62,24 +54,6 @@ repositories.standardToSpineSdk()
 
 dependencies {
     implementation(CoreJvm.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        Compiler.backend,
-        Compiler.jvm,
-//        Validation.java,
-//        Validation.runtime,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
 }
 
 val customConfigFile = "../build-speed.gradle.kts"
@@ -104,12 +78,15 @@ afterEvaluate {
     startTimeMillis = System.currentTimeMillis()
 }
 
+apply(from = "$rootDir/../version.gradle.kts")
+val coreJvmCompilerVersion: String by extra
+
 val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
             "Compiler" to Compiler.version,
-            "CoreJvmCompiler" to CoreJvmCompiler.version,
+            "CoreJvmCompiler" to coreJvmCompilerVersion,
             "CoreJvm" to CoreJvm.version,
             "Validation" to Validation.version,
         )
