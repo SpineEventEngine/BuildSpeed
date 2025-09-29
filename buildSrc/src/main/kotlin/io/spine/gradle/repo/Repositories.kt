@@ -107,8 +107,6 @@ fun RepositoryHandler.standardToSpineSdk() {
 
     @Suppress("DEPRECATION") // Still use `CloudRepo` for earlier versions.
     val spineRepos = listOf(
-        Repos.spine,
-        Repos.spineSnapshots,
         Repos.artifactRegistry,
         Repos.artifactRegistrySnapshots
     )
@@ -146,16 +144,9 @@ fun RepositoryHandler.applyStandard() = this.standardToSpineSdk()
  * @see [applyStandard]
  */
 @Suppress(
-    "DEPRECATION" /* Still need to use `CloudRepo` for older versions. */,
     "ConstPropertyName" // https://bit.ly/kotlin-prop-names
 )
 private object Repos {
-    @Deprecated(message = "Please use `cloudArtifactRegistry.releases` instead.")
-    val spine = io.spine.gradle.publish.CloudRepo.published.target(snapshots = false)
-
-    @Deprecated(message = "Please use `artifactRegistry.snapshots` instead.")
-    val spineSnapshots = io.spine.gradle.publish.CloudRepo.published.target(snapshots = true)
-
     val artifactRegistry = PublishingRepos.cloudArtifactRegistry.target(snapshots = false)
     val artifactRegistrySnapshots = PublishingRepos.cloudArtifactRegistry.target(snapshots = true)
 

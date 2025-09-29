@@ -55,6 +55,11 @@ dependencyResolutionManagement {
             val validationGroup = baseGroup + ".validation"
 
             library(
+                "coreJvm",
+                baseGroup, "spine-core"
+            ).versionRef(coreJvm)
+
+            library(
                 "coreJvmCompiler",
                 toolsGroup, "core-jvm-plugins"
             ).versionRef(coreJvmCompiler)

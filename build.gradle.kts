@@ -24,65 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.local.Compiler
-import io.spine.dependency.local.CoreJvm
-import io.spine.dependency.local.CoreJvmCompiler
-import io.spine.dependency.local.Validation
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.base.build
 import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
+import org.gradle.accessors.dm.LibrariesForSpine
 
 buildscript {
     standardSpineSdkRepositories()
     apply(from = "$rootDir/../version.gradle.kts")
-    configurations.all {
-        resolutionStrategy.force(
-            spineCompiler.pluginLib,
-            spineCompiler.backend,
-            spineCompiler.jvm,
-        )
-    }
-    var coreJvmCompilerVersion: String by extra
-
-    val pluginLib = coreJvmCompiler.pluginLib(coreJvmCompilerVersion)
-    println("****** CoreJvm Compiler plugin: $pluginLib")
+    val spine = the<org.gradle.accessors.dm.LibrariesForSpine>()
+    val coreJvmCompilerVersion: String by extra
     dependencies {
-        classpath(pluginLib)
+        classpath(variantOf(spine.coreJvmCompiler) { classifier("all") })
     }
 }
 
 plugins {
     java
     id("com.google.protobuf")
-    idea
     id("com.osacky.doctor") version "0.8.1"
 }
 
-apply(plugin = CoreJvmCompiler.pluginId)
+apply(plugin = "io.spine.core-jvm")
 
 repositories.standardToSpineSdk()
 
+val spine = the<LibrariesForSpine>()
+
 dependencies {
-    implementation(CoreJvm.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        Compiler.backend,
-        Compiler.jvm,
-//        Validation.java,
-//        Validation.runtime,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
+    implementation(spine.server)
 }
 
 val customConfigFile = "../build-speed.gradle.kts"
@@ -107,14 +78,17 @@ afterEvaluate {
     startTimeMillis = System.currentTimeMillis()
 }
 
+apply(from = "$rootDir/../version.gradle.kts")
+val coreJvmCompilerVersion: String by extra
+
 val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
-            "Compiler" to Compiler.version,
-            "CoreJvmCompiler" to CoreJvmCompiler.version,
-            "CoreJvm" to CoreJvm.version,
-            "Validation" to Validation.version,
+            "Compiler" to spine.versions.spineCompiler.get(),
+            "CoreJvmCompiler" to spine.versions.coreJvmCompiler.get(),
+            "CoreJvm" to spine.versions.coreJvm.get(),
+            "Validation" to spine.versions.validation.get(),
         )
     )
 }
