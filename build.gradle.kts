@@ -28,32 +28,40 @@ import io.spine.gradle.UpdateJournal
 import io.spine.gradle.base.build
 import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
-import org.gradle.accessors.dm.LibrariesForSpine
 
 buildscript {
     standardSpineSdkRepositories()
-    apply(from = "$rootDir/../version.gradle.kts")
-    val spine = the<org.gradle.accessors.dm.LibrariesForSpine>()
-    val coreJvmCompilerVersion: String by extra
     dependencies {
-        classpath(variantOf(spine.coreJvmCompiler) { classifier("all") })
+        classpath(variantOf(libs.coreJvmCompiler) { classifier("all") })
     }
 }
 
 plugins {
     java
+    kotlin("jvm")
     id("com.google.protobuf")
     id("com.osacky.doctor") version "0.8.1"
+}
+
+kotlin {
+    explicitApi()
+    compilerOptions {
+        jvmTarget.set(BuildSettings.jvmTarget)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    val javaVer = BuildSettings.javaVersion.toString()
+    sourceCompatibility = javaVer
+    targetCompatibility = javaVer
 }
 
 apply(plugin = "io.spine.core-jvm")
 
 repositories.standardToSpineSdk()
 
-val spine = the<LibrariesForSpine>()
-
 dependencies {
-    implementation(spine.server)
+    implementation(libs.coreJvmServer)
 }
 
 val customConfigFile = "../build-speed.gradle.kts"
@@ -85,10 +93,10 @@ val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
-            "Compiler" to spine.versions.spineCompiler.get(),
-            "CoreJvmCompiler" to spine.versions.coreJvmCompiler.get(),
-            "CoreJvm" to spine.versions.coreJvm.get(),
-            "Validation" to spine.versions.validation.get(),
+            "Compiler" to libs.versions.spineCompiler.get(),
+            "CoreJvmCompiler" to libs.versions.coreJvmCompiler.get(),
+            "CoreJvm" to libs.versions.coreJvm.get(),
+            "Validation" to libs.versions.validation.get(),
         )
     )
 }
