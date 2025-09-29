@@ -40,14 +40,14 @@
 
 dependencyResolutionManagement {
     versionCatalogs {
-
         // String interpolation can break because of environment variable substitution.
         @Suppress("ConvertToStringTemplate")
-        create("spine") {
-            val compiler = version("spineCompiler", "$COMPILER_VERSION")
-            val validation = version("validation", "$VALIDATION_VERSION")
+        create("libs") {
+            version("spineCompiler", "$COMPILER_VERSION")
+
             val coreJvm = version("coreJvm", "$CORE_JVM_VERSION")
             val coreJvmCompiler = version("coreJvmCompiler", "$CORE_JVM_COMPILER_VERSION")
+            val validation = version("validation", "$VALIDATION_VERSION")
 
             val baseGroup = "io.spine"
             val toolsGroup = baseGroup + ".tools"
@@ -65,29 +65,9 @@ dependencyResolutionManagement {
             ).versionRef(coreJvmCompiler)
 
             library(
-                "server",
+                "coreJvmServer",
                 baseGroup, "spine-server"
             ).versionRef(coreJvm)
-
-            library(
-                "spineCompiler.plugin",
-                compilerGroup, "compiler-gradle-plugin"
-            ).versionRef(compiler)
-
-            library(
-                "spineCompiler.compiler",
-                compilerGroup, "compiler-backend"
-            ).versionRef(compiler)
-
-            library(
-                "compiler.jvm",
-                compilerGroup, "compiler-jvm"
-            ).versionRef(compiler)
-
-            library(
-                "validation.codegenJava",
-                validationGroup, "spine-validation-java-bundle"
-            ).versionRef(validation)
 
             library(
                 "validation.runtimeJava",
