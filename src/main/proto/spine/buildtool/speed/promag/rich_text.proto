@@ -60,7 +60,7 @@ message Color {
 message Font {
 
     oneof family {
-        option (is_required) = true;
+        option (choice).required = true;
 
         string name = 1;
 
@@ -99,13 +99,11 @@ message Hyperlink {
     spine.net.Url url = 2 [(required) = true];
 
     Style new_style = 3 [
-        (validate) = true,
-        (if_invalid).error_msg = "Hyperlink style should be valid."
+        (validate) = true
     ];
 
     Style visited_style = 4 [
-        (validate) = true,
-        (if_invalid).error_msg = "Clicked hyperlink style should be valid."
+        (validate) = true
     ];
 
     bool visited = 5;
@@ -121,7 +119,7 @@ message Icon {
 message Fragment {
 
     oneof kind {
-        option (is_required) = true;
+        option (choice).required = true;
 
         Span text_span = 1 [(validate) = true];
 
