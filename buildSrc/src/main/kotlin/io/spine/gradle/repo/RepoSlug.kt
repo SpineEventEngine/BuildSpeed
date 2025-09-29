@@ -24,46 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.artifacts.ModuleDependency
-import org.gradle.api.artifacts.ResolutionStrategy
-import org.gradle.kotlin.dsl.exclude
+package io.spine.gradle.repo
+
+import org.gradle.api.GradleException
 
 /**
- * The function to be used in `buildscript` when a fully qualified call must be made.
+ * A name of a repository.
  */
 @Suppress("unused")
-fun doForceVersions(configurations: ConfigurationContainer) {
-    configurations.forceVersions()
-}
+class RepoSlug(val value: String) {
 
-/**
- * Forces dependencies used in the project.
- */
-fun NamedDomainObjectContainer<Configuration>.forceVersions() {
-    all {
-        resolutionStrategy {
-            failOnVersionConflict()
-            cacheChangingModulesFor(0, "seconds")
+    companion object {
+
+        /**
+         * The name of the environment variable containing the repository slug, for which
+         * the Gradle build is performed.
+         */
+        private const val environmentVariable = "REPO_SLUG"
+
+        /**
+         * Reads `REPO_SLUG` environment variable and returns its value.
+         *
+         * In case it is not set, a [org.gradle.api.GradleException] is thrown.
+         */
+        fun fromVar(): RepoSlug {
+            val envValue = System.getenv(environmentVariable)
+            if (envValue.isNullOrEmpty()) {
+                throw GradleException("`REPO_SLUG` environment variable is not set.")
+            }
+            return RepoSlug(envValue)
         }
     }
-}
 
-@Suppress("unused")
-fun NamedDomainObjectContainer<Configuration>.excludeProtobufLite() {
+    override fun toString(): String = value
 
-    fun excludeProtoLite(configurationName: String) {
-        named(configurationName).get().exclude(
-            mapOf(
-                "group" to "com.google.protobuf",
-                "module" to "protobuf-lite"
-            )
-        )
+    /**
+     * Returns the GitHub URL to the project repository.
+     */
+    fun gitHost(): String {
+        return "git@github.com-publish:${value}.git"
     }
-
-    excludeProtoLite("runtimeOnly")
-    excludeProtoLite("testRuntimeOnly")
 }

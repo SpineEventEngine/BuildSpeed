@@ -24,46 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.artifacts.ModuleDependency
-import org.gradle.api.artifacts.ResolutionStrategy
-import org.gradle.kotlin.dsl.exclude
-
 /**
- * The function to be used in `buildscript` when a fully qualified call must be made.
+ * The settings of the software license which apply to the code of this project.
+ *
+ * The constants defined in this object are used by the
+ * [PublicationHandler][io.spine.gradle.publish.PublicationHandler] to set up
+ * corresponding properties of the published `pom.xml` file of an artifact.
+ *
+ * So, in order to adapt the license settings to the requirements of a particular project,
+ * simply change the values of the constants defined in this object.
+ *
+ * @see io.spine.gradle.publish.PublicationHandler
  */
-@Suppress("unused")
-fun doForceVersions(configurations: ConfigurationContainer) {
-    configurations.forceVersions()
-}
-
-/**
- * Forces dependencies used in the project.
- */
-fun NamedDomainObjectContainer<Configuration>.forceVersions() {
-    all {
-        resolutionStrategy {
-            failOnVersionConflict()
-            cacheChangingModulesFor(0, "seconds")
-        }
-    }
-}
-
-@Suppress("unused")
-fun NamedDomainObjectContainer<Configuration>.excludeProtobufLite() {
-
-    fun excludeProtoLite(configurationName: String) {
-        named(configurationName).get().exclude(
-            mapOf(
-                "group" to "com.google.protobuf",
-                "module" to "protobuf-lite"
-            )
-        )
-    }
-
-    excludeProtoLite("runtimeOnly")
-    excludeProtoLite("testRuntimeOnly")
+@Suppress("ConstPropertyName", "unused") // https://bit.ly/kotlin-prop-names
+object LicenseSettings {
+    const val name = "The Apache License, Version 2.0"
+    const val url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
 }

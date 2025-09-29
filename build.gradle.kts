@@ -24,64 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.local.McJava
-import io.spine.dependency.local.ProtoData
-import io.spine.dependency.local.CoreJava
-import io.spine.dependency.local.Validation
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.base.build
-import io.spine.gradle.standardToSpineSdk
+import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
-
-plugins {
-    java
-    id("com.google.protobuf")
-    idea
-    id("com.osacky.doctor") version "0.8.1"
-}
 
 buildscript {
     standardSpineSdkRepositories()
-
     dependencies {
-        classpath(mcJava.pluginLib(mcJava.version))
-    }
-
-    configurations.all {
-        resolutionStrategy.force(
-            protoData.pluginLib,
-            protoData.backend,
-            protoData.java,
-            validation.java,
-            validation.javaBundle,
-        )
+        classpath(variantOf(libs.coreJvmCompiler) { classifier("all") })
     }
 }
+
+plugins {
+    java
+    kotlin("jvm")
+    id("com.google.protobuf")
+    id("com.osacky.doctor") version "0.8.1"
+}
+
+kotlin {
+    explicitApi()
+    compilerOptions {
+        jvmTarget.set(BuildSettings.jvmTarget)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    val javaVer = BuildSettings.javaVersion.toString()
+    sourceCompatibility = javaVer
+    targetCompatibility = javaVer
+}
+
+apply(plugin = "io.spine.core-jvm")
 
 repositories.standardToSpineSdk()
 
-apply(plugin = McJava.pluginId)
-
 dependencies {
-    implementation(CoreJava.server)
-}
-
-configurations.all {
-    resolutionStrategy.force(
-        ProtoData.backend,
-        ProtoData.java,
-        Validation.java,
-        Validation.runtime,
-    )
-}
-
-idea {
-    module {
-        generatedSourceDirs = listOf(
-            "$projectDir/generated/main/java",
-            "$projectDir/generated/main/kotlin"
-        ).map(::file).toSet()
-    }
+    implementation(libs.coreJvmServer)
 }
 
 val customConfigFile = "../build-speed.gradle.kts"
@@ -110,10 +90,10 @@ val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
-            "core" to CoreJava.version,
-            "ProtoData" to ProtoData.version,
-            "Validation" to Validation.version,
-            "mc-java" to McJava.version
+            "Compiler" to libs.versions.spineCompiler.get(),
+            "CoreJvmCompiler" to libs.versions.coreJvmCompiler.get(),
+            "CoreJvm" to libs.versions.coreJvm.get(),
+            "Validation" to libs.versions.validation.get(),
         )
     )
 }

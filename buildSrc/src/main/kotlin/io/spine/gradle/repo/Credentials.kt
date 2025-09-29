@@ -24,46 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.NamedDomainObjectContainer
-import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.artifacts.ModuleDependency
-import org.gradle.api.artifacts.ResolutionStrategy
-import org.gradle.kotlin.dsl.exclude
+package io.spine.gradle.repo
 
 /**
- * The function to be used in `buildscript` when a fully qualified call must be made.
+ * Password credentials for a Maven repository.
  */
-@Suppress("unused")
-fun doForceVersions(configurations: ConfigurationContainer) {
-    configurations.forceVersions()
-}
-
-/**
- * Forces dependencies used in the project.
- */
-fun NamedDomainObjectContainer<Configuration>.forceVersions() {
-    all {
-        resolutionStrategy {
-            failOnVersionConflict()
-            cacheChangingModulesFor(0, "seconds")
-        }
-    }
-}
-
-@Suppress("unused")
-fun NamedDomainObjectContainer<Configuration>.excludeProtobufLite() {
-
-    fun excludeProtoLite(configurationName: String) {
-        named(configurationName).get().exclude(
-            mapOf(
-                "group" to "com.google.protobuf",
-                "module" to "protobuf-lite"
-            )
-        )
-    }
-
-    excludeProtoLite("runtimeOnly")
-    excludeProtoLite("testRuntimeOnly")
-}
+data class Credentials(
+    val username: String?,
+    val password: String?
+)

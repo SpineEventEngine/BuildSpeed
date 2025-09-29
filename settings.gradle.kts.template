@@ -27,61 +27,47 @@
 @file:Suppress("UnstableApiUsage")
 
 /**
- * This version of `settings.gradle.kts` is used when `BuildPerformance` is build in a CI job.
+ * This version of `settings.gradle.kts` is used when `BuildSpeed` is build in a CI job.
  *
  * The version of Spine dependencies must be supplied as environment variables:
- *  - `MC_JAVA_VERSION` - the version of the McJava plugin;
- *  - `PROTO_DATA_VERSION` - the version of the ProtoData;
- *  - `VALIDATION_VERSION` - the version of the Validation extension of ProtoData.
+ *  - `COMPILER_VERSION` - the version of the Spine Compiler;
+ *  - `VALIDATION_VERSION` - the version of the Validation plugin to the Spine Compiler;
+ *  - `CORE_JVM_VERSION` — the version of the CoreJvm library;
+ *  - `CORE_JVM_COMPILER_VERSION` - the version of the CoreJvm Compiler plugin.
  *
  * See `settings.gradle.kts` for the version of the file used for local builds.
  */
 
 dependencyResolutionManagement {
     versionCatalogs {
-
         // String interpolation can break because of environment variable substitution.
         @Suppress("ConvertToStringTemplate")
-        create("spine") {
-            val mcJava = version("mcJava", "$MC_JAVA_VERSION")
-            val core = version("core", "$CORE_VERSION")
-            val protoData = version("protoData", "$PROTO_DATA_VERSION")
+        create("libs") {
+            version("spineCompiler", "$COMPILER_VERSION")
+
+            val coreJvm = version("coreJvm", "$CORE_JVM_VERSION")
+            val coreJvmCompiler = version("coreJvmCompiler", "$CORE_JVM_COMPILER_VERSION")
             val validation = version("validation", "$VALIDATION_VERSION")
 
             val baseGroup = "io.spine"
             val toolsGroup = baseGroup + ".tools"
-            val protoDataGroup = baseGroup + ".protodata"
+            val compilerGroup = toolsGroup
             val validationGroup = baseGroup + ".validation"
 
             library(
-                "mcJava",
-                toolsGroup, "spine-mc-java-plugins"
-            ).versionRef(mcJava)
+                "coreJvm",
+                baseGroup, "spine-core"
+            ).versionRef(coreJvm)
 
             library(
-                "server",
+                "coreJvmCompiler",
+                toolsGroup, "core-jvm-plugins"
+            ).versionRef(coreJvmCompiler)
+
+            library(
+                "coreJvmServer",
                 baseGroup, "spine-server"
-            ).versionRef(core)
-
-            library(
-                "protoData.plugin",
-                baseGroup, "protodata"
-            ).versionRef(protoData)
-
-            library(
-                "protoData.compiler",
-                protoDataGroup, "protodata-compiler"
-            ).versionRef(protoData)
-
-            library(
-                "protoData.codegenJava",
-                protoDataGroup, "protodata-codegen-java"
-            ).versionRef(protoData)
-
-            library(
-                "validation.codegenJava",
-                validationGroup, "spine-validation-java-bundle"
-            ).versionRef(validation)
+            ).versionRef(coreJvm)
 
             library(
                 "validation.runtimeJava",
