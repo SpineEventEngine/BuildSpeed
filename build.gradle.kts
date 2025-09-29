@@ -86,9 +86,6 @@ afterEvaluate {
     startTimeMillis = System.currentTimeMillis()
 }
 
-apply(from = "$rootDir/../version.gradle.kts")
-val coreJvmCompilerVersion: String by extra
-
 val recordExecTime by tasks.registering(UpdateJournal::class) {
     startTime = Supplier { startTimeMillis!! }
     versions.set(
