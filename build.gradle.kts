@@ -36,6 +36,9 @@ buildscript {
     }
 }
 
+group = "io.spine.tools.tests"
+version = "1.0.0-SNAPSHOT"
+
 plugins {
     java
     kotlin("jvm")
