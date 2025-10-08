@@ -28,23 +28,11 @@
 
 package io.spine.gradle.repo
 
-import io.spine.gradle.publish.PublishingRepos
+import io.spine.gradle.publish.CloudArtifactRegistry
 import java.net.URI
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.kotlin.dsl.maven
-
-/**
- * Registers the standard set of Maven repositories.
- *
- * To be used in `buildscript` clauses when a fully-qualified call must be made.
- */
-@Suppress("unused")
-@Deprecated(
-    message = "Please use `standardSpineSdkRepositories()`.",
-    replaceWith = ReplaceWith("standardSpineSdkRepositories()")
-)
-fun doApplyStandard(repositories: RepositoryHandler) = repositories.standardToSpineSdk()
 
 /**
  * A scrambled version of PAT generated with the only "read:packages" scope.
@@ -132,23 +120,15 @@ fun RepositoryHandler.standardToSpineSdk() {
     mavenLocal().includeSpineOnly()
 }
 
-@Deprecated(
-    message = "Please use `standardToSpineSdk() instead.",
-    replaceWith = ReplaceWith("standardToSpineSdk()")
-)
-fun RepositoryHandler.applyStandard() = this.standardToSpineSdk()
-
 /**
  * Defines names of additional repositories commonly used in the Spine SDK projects.
- *
- * @see [applyStandard]
  */
 @Suppress(
     "ConstPropertyName" // https://bit.ly/kotlin-prop-names
 )
 private object Repos {
-    val artifactRegistry = PublishingRepos.cloudArtifactRegistry.target(snapshots = false)
-    val artifactRegistrySnapshots = PublishingRepos.cloudArtifactRegistry.target(snapshots = true)
+    val artifactRegistry = CloudArtifactRegistry.repository.target(snapshots = false)
+    val artifactRegistrySnapshots = CloudArtifactRegistry.repository.target(snapshots = true)
 
     const val sonatypeSnapshots = "https://oss.sonatype.org/content/repositories/snapshots"
 }

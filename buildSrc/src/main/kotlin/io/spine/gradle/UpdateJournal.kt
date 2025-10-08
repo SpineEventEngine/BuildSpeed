@@ -31,7 +31,6 @@ import java.time.Instant
 import java.util.function.Supplier
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.MapProperty
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
@@ -64,8 +63,7 @@ abstract class UpdateJournal : DefaultTask() {
 
         val userName = System.getProperty("user.name")
         val timestamp = Instant.now().toString()
-        val printedVersions = printVersions()
-        val versions = printedVersions
+        val versions = printVersions()
         val logRecord = "$duration :: $userName :: $timestamp :: $versions"
 
         val logFile = prepareFile()
@@ -80,7 +78,10 @@ abstract class UpdateJournal : DefaultTask() {
         val commentSize = headingComment.size
         updatedLines.add(commentSize, logRecord)
 
-        logFile.writeText(updatedLines.joinToString(System.lineSeparator()))
+        val separator = System.lineSeparator()
+        val text = updatedLines.joinToString(separator) +
+                ((if (updatedLines.last() != separator) separator else ""))
+        logFile.writeText(text)
     }
 
     private fun prepareFile(): File {
