@@ -26,10 +26,10 @@ jobs:
         shell: bash
         run: ./substitute-settings.py
         env:
-          COMPILER_VERSION: "2.0.0-SNAPSHOT.016"
+          COMPILER_VERSION: "2.0.0-SNAPSHOT.024"
           VALIDATION_VERSION: "2.0.0-SNAPSHOT.351"
           CORE_JVM_VERSION: "2.0.0-SNAPSHOT.330"
-          CORE_JVM_COMPILER_VERSION: "2.0.0-SNAPSHOT.007"
+          CORE_JVM_COMPILER_VERSION: "2.0.0-SNAPSHOT.015"
 
       - name: Build project
         shell: bash
