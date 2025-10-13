@@ -25,7 +25,6 @@
  */
 
 import io.spine.gradle.UpdateJournal
-import io.spine.gradle.base.build
 import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
 
