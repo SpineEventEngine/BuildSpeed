@@ -32,7 +32,7 @@ import java.util.function.Supplier
 buildscript {
     standardSpineSdkRepositories()
     dependencies {
-        classpath(variantOf(libs.coreJvmCompiler) { classifier("all") })
+        classpath(libs.coreJvmCompiler)
     }
 }
 
