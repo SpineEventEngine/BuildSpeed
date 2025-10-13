@@ -37,7 +37,7 @@ import org.gradle.api.Project
  *   for identifying the target repository.
  *   The name must match the [regex].
  * @param releases The URL for publishing release versions of artifacts.
- * @param snapshots The URL for publishing [snapshot][io.spine.gradle.isSnapshot] versions.
+ * @param snapshots The URL for publishing snapshot versions.
  * @param credentialsFile The path to the file which contains the credentials for the registry.
  * @param credentialValues The function to obtain an instance of [Credentials] from
  *   a Gradle [Project], if [credentialsFile] is not specified.
