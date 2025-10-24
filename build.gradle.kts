@@ -42,7 +42,7 @@ plugins {
     java
     kotlin("jvm")
     id("com.google.protobuf")
-    id("com.osacky.doctor") version "0.8.1"
+    id("com.osacky.doctor") version "0.12.0"
 }
 
 kotlin {
