@@ -25,7 +25,6 @@
  */
 
 import io.spine.gradle.UpdateJournal
-import io.spine.gradle.base.build
 import io.spine.gradle.repo.standardToSpineSdk
 import java.util.function.Supplier
 
@@ -43,7 +42,7 @@ plugins {
     java
     kotlin("jvm")
     id("com.google.protobuf")
-    id("com.osacky.doctor") version "0.8.1"
+    id("com.osacky.doctor") version "0.12.0"
 }
 
 kotlin {
