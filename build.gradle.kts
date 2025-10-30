@@ -31,6 +31,7 @@ import java.util.function.Supplier
 buildscript {
     standardSpineSdkRepositories()
     dependencies {
+        classpath(libs.spineCompiler)
         classpath(libs.coreJvmCompiler)
     }
 }
