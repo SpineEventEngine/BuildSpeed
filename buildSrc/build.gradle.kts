@@ -65,7 +65,7 @@ val jacksonVersion = "2.18.3"
  */
 val googleAuthToolVersion = "2.1.5"
 
-val licenseReportVersion = "2.7"
+val licenseReportVersion = "3.1.2"
 
 val grGitVersion = "4.1.1"
 
@@ -75,7 +75,7 @@ val grGitVersion = "4.1.1"
  * This version may change from the [version of Kotlin][io.spine.dependency.lib.Kotlin.version]
  * used by the project.
  */
-val kotlinVersion = "2.2.20"
+val kotlinVersion = "2.3.21"
 
 /**
  * The version of Guava used in `buildSrc`.
@@ -83,7 +83,7 @@ val kotlinVersion = "2.2.20"
  * Always use the same version as the one specified in [io.spine.dependency.lib.Guava].
  * Otherwise, when testing Gradle plugins, clashes may occur.
  */
-val guavaVersion = "33.4.8-jre"
+val guavaVersion = "33.6.0-jre"
 
 /**
  * The version of ErrorProne Gradle plugin.
@@ -93,7 +93,7 @@ val guavaVersion = "33.4.8-jre"
  * @see <a href="https://github.com/tbroyer/gradle-errorprone-plugin/releases">
  *     Error Prone Gradle Plugin Releases</a>
  */
-val errorPronePluginVersion = "4.2.0"
+val errorPronePluginVersion = "5.1.0"
 
 /**
  * The version of Protobuf Gradle Plugin.
@@ -103,7 +103,7 @@ val errorPronePluginVersion = "4.2.0"
  * @see <a href="https://github.com/google/protobuf-gradle-plugin/releases">
  *     Protobuf Gradle Plugins Releases</a>
  */
-val protobufPluginVersion = "0.9.5"
+val protobufPluginVersion = "0.10.0"
 
 /**
  * The version of Dokka Gradle Plugins.
@@ -113,7 +113,7 @@ val protobufPluginVersion = "0.9.5"
  * @see <a href="https://github.com/Kotlin/dokka/releases">
  *     Dokka Releases</a>
  */
-val dokkaVersion = "2.0.0"
+val dokkaVersion = "2.2.0"
 
 /**
  * The version of Detekt Gradle Plugin.
@@ -130,16 +130,14 @@ val kotestJvmPluginVersion = "0.4.10"
 /**
  * @see [io.spine.dependency.test.Kover]
  */
-val koverVersion = "0.7.2"
+val koverVersion = "0.9.9"
 
 /**
  * The version of the Shadow Plugin.
  *
- * `7.1.2` is the last version compatible with Gradle 7.x. Newer versions require Gradle v8.x.
- *
- * @see <a href="https://github.com/johnrengelman/shadow/releases">Shadow Plugin releases</a>
+ * @see <a href="https://github.com/GradleUp/shadow">Shadow Plugin releases</a>
  */
-val shadowVersion = "8.3.6"
+val shadowVersion = "9.4.1"
 
 configurations.all {
     resolutionStrategy {
