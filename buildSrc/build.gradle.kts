@@ -26,19 +26,10 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-/**
- * This script uses two declarations of the constant [licenseReportVersion] because
- * currently there is no way to define a constant _before_ a build script of `buildSrc`.
- * We cannot use imports or do something else before the `buildscript` or `plugin` clauses.
- */
-
 plugins {
     java
     groovy
     `kotlin-dsl`
-
-    // https://github.com/jk1/Gradle-License-Report/releases
-    id("com.github.jk1.dependency-license-report").version("3.1.2")
 }
 
 repositories {
@@ -64,8 +55,6 @@ val jacksonVersion = "2.18.3"
  *     Google Artifact Registry at Maven</a>
  */
 val googleAuthToolVersion = "2.1.5"
-
-val licenseReportVersion = "3.1.2"
 
 val grGitVersion = "4.1.1"
 
@@ -105,40 +94,6 @@ val errorPronePluginVersion = "5.1.0"
  */
 val protobufPluginVersion = "0.10.0"
 
-/**
- * The version of Dokka Gradle Plugins.
- *
- * Please keep in sync with [io.spine.dependency.build.Dokka.version].
- *
- * @see <a href="https://github.com/Kotlin/dokka/releases">
- *     Dokka Releases</a>
- */
-val dokkaVersion = "2.2.0"
-
-/**
- * The version of Detekt Gradle Plugin.
- *
- * @see <a href="https://github.com/detekt/detekt/releases">Detekt Releases</a>
- */
-val detektVersion = "1.23.8"
-
-/**
- * @see [io.spine.dependency.test.Kotest]
- */
-val kotestJvmPluginVersion = "0.4.10"
-
-/**
- * @see [io.spine.dependency.test.Kover]
- */
-val koverVersion = "0.9.9"
-
-/**
- * The version of the Shadow Plugin.
- *
- * @see <a href="https://github.com/GradleUp/shadow">Shadow Plugin releases</a>
- */
-val shadowVersion = "9.4.1"
-
 configurations.all {
     resolutionStrategy {
         force(
@@ -164,27 +119,19 @@ kotlin {
 }
 
 dependencies {
-    api("com.github.jk1:gradle-license-report:$licenseReportVersion")
     dependOnAuthCommon()
 
     listOf(
         "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion",
-        "com.github.jk1:gradle-license-report:$licenseReportVersion",
         "com.google.guava:guava:$guavaVersion",
         "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion",
-        "com.gradleup.shadow:shadow-gradle-plugin:$shadowVersion",
-        "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion",
-        "io.kotest:kotest-gradle-plugin:$kotestJvmPluginVersion",
         // https://github.com/srikanth-lingala/zip4j
         "net.lingala.zip4j:zip4j:2.10.0",
         "net.ltgt.gradle:gradle-errorprone-plugin:${errorPronePluginVersion}",
         "org.ajoberstar.grgit:grgit-core:${grGitVersion}",
-        "org.jetbrains.dokka:dokka-base:${dokkaVersion}",
-        "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-        "org.jetbrains.kotlinx:kover-gradle-plugin:$koverVersion"
     ).forEach {
         implementation(it)
     }
