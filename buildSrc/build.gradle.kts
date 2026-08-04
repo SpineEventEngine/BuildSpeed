@@ -112,15 +112,8 @@ dependencies {
     dependOnAuthCommon()
 
     listOf(
-        "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
-        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion",
-        "com.google.guava:guava:$guavaVersion",
         "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion",
-        // https://github.com/srikanth-lingala/zip4j
-        "net.lingala.zip4j:zip4j:2.10.0",
-        "org.ajoberstar.grgit:grgit-core:${grGitVersion}",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-        "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
     ).forEach {
         implementation(it)
     }
