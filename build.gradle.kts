@@ -26,6 +26,8 @@
 
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.repo.standardToSpineSdk
+import io.spine.tools.gradle.lib.spineExtension
+import io.spine.tools.validation.gradle.ValidationExtension
 import java.util.function.Supplier
 
 buildscript {
@@ -37,7 +39,7 @@ buildscript {
 }
 
 group = "io.spine.tools.tests"
-version = "1.0.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 plugins {
     java
@@ -71,6 +73,11 @@ val customConfigFile = "../build-speed.gradle.kts"
 
 if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)
+}
+
+afterEvaluate {
+    val validationExtension = spineExtension<ValidationExtension>()
+    validationExtension.java.suppressWarnings.unsignedFields.set(true)
 }
 
 /**
