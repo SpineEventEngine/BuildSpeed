@@ -89,7 +89,8 @@ afterEvaluate {
     startTimeMillis = System.currentTimeMillis()
 }
 
-val recordExecTime by tasks.registering(UpdateJournal::class) {
+val recordExecTime = tasks.register<UpdateJournal>("recordExecTime") {
+    description = "Records the execution time of the build in a journal file."
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(
