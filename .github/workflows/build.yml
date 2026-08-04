@@ -13,23 +13,25 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: 'true'
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: 17
           distribution: zulu
+
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Substitute Gradle settings file
         shell: bash
         run: ./substitute-settings.py
         env:
-          COMPILER_VERSION: "2.0.0-SNAPSHOT.024"
-          VALIDATION_VERSION: "2.0.0-SNAPSHOT.351"
-          CORE_JVM_VERSION: "2.0.0-SNAPSHOT.330"
-          CORE_JVM_COMPILER_VERSION: "2.0.0-SNAPSHOT.015"
+          COMPILER_VERSION: "2.0.0-SNAPSHOT.065"
+          VALIDATION_VERSION: "2.0.0-SNAPSHOT.462"
+          CORE_JVM_VERSION: "2.0.0-SNAPSHOT.522"
+          CORE_JVM_COMPILER_VERSION: "2.0.0-SNAPSHOT.080"
 
       - name: Build project
         shell: bash

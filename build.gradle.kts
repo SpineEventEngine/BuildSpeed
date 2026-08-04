@@ -26,7 +26,10 @@
 
 import io.spine.gradle.UpdateJournal
 import io.spine.gradle.repo.standardToSpineSdk
+import io.spine.tools.gradle.lib.spineExtension
+import io.spine.tools.validation.gradle.ValidationExtension
 import java.util.function.Supplier
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 
 buildscript {
     standardSpineSdkRepositories()
@@ -37,24 +40,26 @@ buildscript {
 }
 
 group = "io.spine.tools.tests"
-version = "1.0.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 plugins {
     java
-    kotlin("jvm")
-    id("com.google.protobuf")
+    kotlin("jvm") version "2.3.21"
+    id("com.google.protobuf") version "0.10.0"
     id("com.osacky.doctor") version "0.12.0"
 }
+
+val targetJvmVersion = JVM_17
 
 kotlin {
     explicitApi()
     compilerOptions {
-        jvmTarget.set(BuildSettings.jvmTarget)
+        jvmTarget.set(targetJvmVersion)
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    val javaVer = BuildSettings.javaVersion.toString()
+    val javaVer = targetJvmVersion.target
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
 }
@@ -73,6 +78,11 @@ if (file(customConfigFile).exists()) {
     apply(from = customConfigFile)
 }
 
+afterEvaluate {
+    val validationExtension = spineExtension<ValidationExtension>()
+    validationExtension.java.suppressWarnings.unsignedFields.set(true)
+}
+
 /**
  * Set up the `recordExecTime` task that logs the execution time of the build.
  *
@@ -89,7 +99,8 @@ afterEvaluate {
     startTimeMillis = System.currentTimeMillis()
 }
 
-val recordExecTime by tasks.registering(UpdateJournal::class) {
+val recordExecTime = tasks.register<UpdateJournal>("recordExecTime") {
+    description = "Records the execution time of the build in a journal file."
     startTime = Supplier { startTimeMillis!! }
     versions.set(
         mapOf(

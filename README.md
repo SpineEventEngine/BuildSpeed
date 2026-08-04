@@ -37,10 +37,10 @@ To launch the build speed tests with Gradle, follow these steps.
    ```kotlin
    val prepareBuildSpeedSettings by tasks.registering(Exec::class) {
        environment(
-           "MC_JAVA_VERSION" to Spine.McJava.version,
-           "CORE_VERSION" to Spine.ArtifactVersion.core,
-           "PROTO_DATA_VERSION" to ProtoData.version,
-           "VALIDATION_VERSION" to Validation.version
+           "COMPILER_VERSION" to Compiler.version,
+           "VALIDATION_VERSION" to Validation.version,
+           "CORE_JVM_VERSION" to CoreJvm.version,
+           "CORE_JVM_COMPILER_VERSION" to coreJvmCompilerVersion,
        )
        workingDir = File(rootDir, "BuildSpeed")
        commandLine("./substitute-settings.py")
