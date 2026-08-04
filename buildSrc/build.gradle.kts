@@ -75,16 +75,6 @@ val kotlinVersion = "2.3.21"
 val guavaVersion = "33.6.0-jre"
 
 /**
- * The version of ErrorProne Gradle plugin.
- *
- * Please keep in sync. with [io.spine.dependency.build.ErrorProne.GradlePlugin.version].
- *
- * @see <a href="https://github.com/tbroyer/gradle-errorprone-plugin/releases">
- *     Error Prone Gradle Plugin Releases</a>
- */
-val errorPronePluginVersion = "5.1.0"
-
-/**
  * The version of Protobuf Gradle Plugin.
  *
  * Please keep in sync. with [io.spine.dependency.lib.Protobuf.GradlePlugin.version].
@@ -128,7 +118,6 @@ dependencies {
         "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion",
         // https://github.com/srikanth-lingala/zip4j
         "net.lingala.zip4j:zip4j:2.10.0",
-        "net.ltgt.gradle:gradle-errorprone-plugin:${errorPronePluginVersion}",
         "org.ajoberstar.grgit:grgit-core:${grGitVersion}",
         "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
         "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
