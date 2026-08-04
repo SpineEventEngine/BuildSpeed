@@ -29,6 +29,7 @@ import io.spine.gradle.repo.standardToSpineSdk
 import io.spine.tools.gradle.lib.spineExtension
 import io.spine.tools.validation.gradle.ValidationExtension
 import java.util.function.Supplier
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 
 buildscript {
     standardSpineSdkRepositories()
@@ -43,20 +44,22 @@ version = "2.0.0-SNAPSHOT"
 
 plugins {
     java
-    kotlin("jvm")
-    id("com.google.protobuf")
+    kotlin("jvm") version "2.3.21"
+    id("com.google.protobuf") version "0.10.0"
     id("com.osacky.doctor") version "0.12.0"
 }
+
+val targetJvmVersion = JVM_17
 
 kotlin {
     explicitApi()
     compilerOptions {
-        jvmTarget.set(BuildSettings.jvmTarget)
+        jvmTarget.set(targetJvmVersion)
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    val javaVer = BuildSettings.javaVersion.toString()
+    val javaVer = targetJvmVersion.target
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
 }

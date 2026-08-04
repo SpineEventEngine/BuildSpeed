@@ -39,14 +39,6 @@ repositories {
 }
 
 /**
- * The version of Jackson used by `buildSrc`.
- *
- * Please keep this value in sync with [io.spine.dependency.lib.Jackson.version].
- * It is not a requirement but would be good in terms of consistency.
- */
-val jacksonVersion = "2.18.3"
-
-/**
  * The version of Google Artifact Registry used by `buildSrc`.
  *
  * The version `2.1.5` is the latest before `2.2.0`, which introduces breaking changes.
@@ -55,48 +47,6 @@ val jacksonVersion = "2.18.3"
  *     Google Artifact Registry at Maven</a>
  */
 val googleAuthToolVersion = "2.1.5"
-
-val grGitVersion = "4.1.1"
-
-/**
- * The version of the Kotlin Gradle plugin used by the build process.
- *
- * This version may change from the [version of Kotlin][io.spine.dependency.lib.Kotlin.version]
- * used by the project.
- */
-val kotlinVersion = "2.3.21"
-
-/**
- * The version of Guava used in `buildSrc`.
- *
- * Always use the same version as the one specified in [io.spine.dependency.lib.Guava].
- * Otherwise, when testing Gradle plugins, clashes may occur.
- */
-val guavaVersion = "33.6.0-jre"
-
-/**
- * The version of Protobuf Gradle Plugin.
- *
- * Please keep in sync. with [io.spine.dependency.lib.Protobuf.GradlePlugin.version].
- *
- * @see <a href="https://github.com/google/protobuf-gradle-plugin/releases">
- *     Protobuf Gradle Plugins Releases</a>
- */
-val protobufPluginVersion = "0.10.0"
-
-configurations.all {
-    resolutionStrategy {
-        force(
-            "com.google.guava:guava:${guavaVersion}",
-            "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion",
-
-            // Force Kotlin lib versions avoiding using those bundled with Gradle.
-            "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-            "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
-            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-        )
-    }
-}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -110,13 +60,6 @@ kotlin {
 
 dependencies {
     dependOnAuthCommon()
-
-    listOf(
-        "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion",
-        "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-    ).forEach {
-        implementation(it)
-    }
 }
 
 dependOnBuildSrcJar()
