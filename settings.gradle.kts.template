@@ -63,7 +63,7 @@ dependencyResolutionManagement {
 
             library(
                 "coreJvmCompiler",
-                toolsGroup, "core-jvm-plugins"
+                toolsGroup, "core-jvm-gradle-plugin"
             ).versionRef(coreJvmCompiler)
 
             library(
